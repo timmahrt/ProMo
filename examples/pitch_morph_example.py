@@ -5,7 +5,6 @@ from os.path import join
 from praatio import pitch_and_intensity
 
 from promo import f0_morph
-from promo import duration_morph
 
 # Define the arguments for the code
 path = r"C:\Users\Tim\Dropbox\workspace\prosodyMorph\examples\files"
@@ -16,21 +15,21 @@ numSteps = 3
 
 fromName = "mary1"
 toName = "mary2"
-fromFN = fromName + ".wav"
-toFN = toName + ".wav"
+fromWavFN = fromName + ".wav"
+toWavFN = toName + ".wav"
 
 fromPitchFN = fromName + ".txt"
 toPitchFN = toName + ".txt"
 
-fromTGFN = join(path, os.path.splitext(fromFN)[0] + ".TextGrid")
-toTGFN = join(path, os.path.splitext(toFN)[0] + ".TextGrid")
+fromTGFN = join(path, os.path.splitext(fromWavFN)[0] + ".TextGrid")
+toTGFN = join(path, os.path.splitext(toWavFN)[0] + ".TextGrid")
 
 # Prepare the data for morphing
 # 1st load it into memory
-fromPitch = pitch_and_intensity.audioToPI(path, fromFN, path,
+fromPitch = pitch_and_intensity.audioToPI(path, fromWavFN, path,
                                           fromPitchFN, praatEXE, minPitch,
                                           maxPitch, forceRegenerate=False)
-toPitch = pitch_and_intensity.audioToPI(path, toFN, path,
+toPitch = pitch_and_intensity.audioToPI(path, toWavFN, path,
                                         toPitchFN, praatEXE, minPitch,
                                         maxPitch, forceRegenerate=False)
 
@@ -45,24 +44,14 @@ fromPitch = f0_morph.getPitchForIntervals(fromPitch, fromTGFN, tierName)
 toPitch = f0_morph.getPitchForIntervals(toPitch, toTGFN, tierName)
 
 # Run the morph process
-f0_morph.f0Morph(fromWavFN=join(path, fromFN),
+f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  fromPitchFN=join(path, fromPitchFN),
                  toPitchFN=join(path, toPitchFN),
                  numSteps=numSteps,
-                 outputName="%s_%s" % (fromName, toName),
+                 outputName="%s_%s_f0_morph" % (fromName, toName),
                  doPlotPitchSteps=True,
                  fromPitchData=fromPitch,
                  toPitchData=toPitch,
                  outputMinPitch=minPitch,
                  outputMaxPitch=maxPitch,
                  praatEXE=praatEXE)
-
-# duration_morph.durationMorph(join(path, fromFN),
-#                              join(path, toFN),
-#                              path,
-#                              numSteps,
-#                              tierName,
-#                              plotFlag=True,
-#                              outputMinPitch=minPitch,
-#                              outputMaxPitch=maxPitch,
-#                              praatEXE=praatEXE)

@@ -200,7 +200,8 @@ def plotDuration(fromDurationList, toDurationList, resultDataList,
         xLabelList.append(str(i))
 
     xLabelList = ["From", ] + xLabelList + ["To", ]
-    plt.xticks(iterN + width / 2.0, xLabelList)
+    iterN2 = [val + width / 2.0 for val in iterN]
+    plt.xticks(iterN2, xLabelList)
 
     # Plot the data
     transposedList = zip(*dataList)

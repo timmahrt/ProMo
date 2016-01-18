@@ -11,7 +11,7 @@ import os
 from os.path import join, splitext
 
 from praatio import tgio
-from praatio import pitch_and_intensity
+from praatio import dataio
 from praatio import praat_scripts
 
 from promo.morph_utils import utils
@@ -56,7 +56,7 @@ def f0Morph(fromWavFN, fromPitchFN, toPitchFN, numSteps,
 
     # Iterative pitch tier data path
     pitchTierPath = join(pitchPath, "pitchTiers")
-    resynthesizedPath = join(pitchPath, "f0ResynthesizedWavs")
+    resynthesizedPath = join(pitchPath, "f0_resynthesized_wavs")
     for tmpPath in [pitchTierPath, resynthesizedPath]:
         utils.makeDir(tmpPath)
 
@@ -75,15 +75,12 @@ def f0Morph(fromWavFN, fromPitchFN, toPitchFN, numSteps,
     mergedDataList = []
     for i in xrange(0, len(finalOutputList)):
         outputPitchList = finalOutputList[i]
-        pitchFN = "%s_%d.PitchTier" % (toName, i)
-        pitchFNFullPath = join(pitchTierPath, pitchFN)
-        outputFN = join(resynthesizedPath, "%s_f0_%d_%d.wav" % (outputName,
-                                                                numSteps,
-                                                                i + 1))
-        
-        pitch_and_intensity.writePitchTier(pitchTierPath, pitchFN,
-                                           outputPitchList,
-                                           0, fromDuration)
+        stepOutputName = "%s_%d_%d" % (outputName, i + 1, numSteps)
+        pitchFNFullPath = join(pitchTierPath, "%s.PitchTier" % stepOutputName)
+        outputFN = join(resynthesizedPath, "%s.wav" % stepOutputName)
+        pointObj = dataio.PointObject(outputPitchList, dataio.PITCH,
+                                      0, fromDuration)
+        pointObj.save(pitchFNFullPath)
 
         outputTime, outputVals = zip(*outputPitchList)
         mergedDataList.append((outputTime, outputVals))
@@ -101,4 +98,4 @@ def f0Morph(fromWavFN, fromPitchFN, toPitchFN, numSteps,
                                  (toTime, toVals),
                                  mergedDataList,
                                  join(pitchTierPath,
-                                      "%s_%d.png" % (fromName, 1)))
+                                      "%s.png" % outputName))
