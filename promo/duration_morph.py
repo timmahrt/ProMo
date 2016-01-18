@@ -10,6 +10,7 @@ import copy
 
 from praatio import tgio
 from praatio import praat_scripts
+from praatio import dataio
 
 from promo.morph_utils import utils
 from promo.morph_utils import audio_scripts
@@ -31,69 +32,8 @@ class NoLabeledRegionFoundException(Exception):
             self.tgFN
 
 
-def _psolaDuration(ratioTupleList, fromWavDuration, timeDiff, path, fromFN,
-                   numSteps, fromMinPitch, fromMaxPitch,
-                   outputFolder, praatEXE):
-
-    # Prep output directories
-    outputPath = join(path, outputFolder)
-    utils.makeDir(outputPath)
-
-    scriptPath = join(path, "scripts")
-    utils.makeDir(scriptPath)
-
-    # Constants
-    fromName = os.path.splitext(fromFN)[0]
-
-    interpRatioTupleList = copy.deepcopy(ratioTupleList)
-    # No need to stretch out any pauses at the beginning
-    if interpRatioTupleList[0][0] != 0:
-        tmpVar = (0, interpRatioTupleList[0][0] - timeDiff, 1)
-        interpRatioTupleList.insert(0, tmpVar)
-
-    # Or the end
-    if interpRatioTupleList[-1][1] < fromWavDuration:
-        interpRatioTupleList.append((interpRatioTupleList[-1][1] + timeDiff,
-                                     fromWavDuration, 1))
-
-    # Create the praat script for doing duration manipulation
-    durationPointLine = "\tAdd point... %f (1+((%f-1)*zeroedI/(numSteps)))\n"
-#     durationPointLine = "\tAdd point... %f %f\n"
-    durationPointTextList = []
-    for start, end, ratio in interpRatioTupleList:
-        durationPointTextList.append(durationPointLine % (start, ratio))
-        durationPointTextList.append(durationPointLine % (end, ratio))
-
-    durationTierText = "".join(durationPointTextList)
-
-    praat_scripts.resynthesizeDuration(praatEXE, join(path, fromFN), durationTierFN,
-                                       join(outputPath, "blah.wav"), fromMinPitch, fromMaxPitch)
-
-#     psolaDict = {'num_steps': numSteps,
-#                  'input_name': fromName,
-#                  'output_name': fromName,
-#                  'input_dir': path,
-#                  'output_dir': outputPath,
-#                  'pitch_lower_bound': fromMinPitch,
-#                  'pitch_upper_bound': fromMaxPitch,
-#                  'durationTierPoints': durationTierText,
-#                  'start_time': 0,
-#                  'end_time': fromWavDuration,
-#                  }
-# 
-#     durationScript = common.loadPraatTemplate("psolaDurationPiecewise")
-#     durationScript %= psolaDict
-# 
-#     scriptFNFullPath = join(scriptPath, fromName)
-#     open(scriptFNFullPath, "w").write(durationScript)
-# 
-#     # Run the script
-#     print("praat %s" % scriptFNFullPath)
-#     common.runPraatScript(praatExe, scriptFNFullPath)
-
-
-def durationMorph(fromWavFN, toWavFN, tgPath, numSteps, tierName,
-                  plotFlag, outputMinPitch, outputMaxPitch, praatEXE):
+def changeDuration(fromWavFN, durationParameters, numSteps, outputName,
+                   outputMinPitch, outputMaxPitch, praatEXE):
     '''
     Uses praat to morph duration in one file to duration in another
 
@@ -103,32 +43,73 @@ def durationMorph(fromWavFN, toWavFN, tgPath, numSteps, tierName,
     rootPath = os.path.split(fromWavFN)[0]
 
     # Prep output directories
-    outputPath = join(rootPath, "output")
+    outputPath = join(rootPath, "duration_resynthesized_wavs")
     utils.makeDir(outputPath)
     
     durationTierPath = join(rootPath, "duration_tiers")
     utils.makeDir(durationTierPath)
 
-    # Constants
-    fromName = os.path.splitext(os.path.split(fromWavFN)[1])[0]
-    toName = os.path.splitext(os.path.split(toWavFN)[1])[0]
-
     fromWavDuration = audio_scripts.getSoundFileDuration(fromWavFN)
-    toWavDuration = audio_scripts.getSoundFileDuration(toWavFN)
 
-    # Get intervals for source and target audio files
-    # Use this information to find out how much to stretch/shrink each source
-    # interval
-    if tierName is None:
-        fromTGFN = join(tgPath, fromName + ".TextGrid")
-        toTGFN = join(tgPath, toName + ".TextGrid")
-        fromExtractInfo = utils.getIntervals(fromTGFN, tierName)
-        toExtractInfo = utils.getIntervals(toTGFN, tierName)
-    else:
-        fromExtractInfo = [(0, fromWavDuration, ''), ]
-        toExtractInfo = [(0, toWavDuration, ''), ]
+    durationParameters = copy.deepcopy(durationParameters)
+    # Pad any gaps with values of 1 (no change in duration)
+    
+    # No need to stretch out any pauses at the beginning
+    if durationParameters[0][0] != 0:
+        tmpVar = (0, durationParameters[0][0] - PRAAT_TIME_DIFF, 1)
+        durationParameters.insert(0, tmpVar)
 
-    ratioTupleList = []
+    # Or the end
+    if durationParameters[-1][1] < fromWavDuration:
+        durationParameters.append((durationParameters[-1][1] + PRAAT_TIME_DIFF,
+                                   fromWavDuration, 1))
+
+    # Create the praat script for doing duration manipulation
+    for i in xrange(numSteps):
+        durationPointList = []
+        for start, end, ratio in durationParameters:
+            percentChange = 1 + (((ratio - 1) * (i + 1)) / numSteps)
+            durationPointList.append((start, percentChange))
+            durationPointList.append((end, percentChange))
+        
+        outputPrefix = "%s_%d_%d" % (outputName, i + 1, numSteps)
+        durationTierFN = join(durationTierPath,
+                              "%s.DurationTier" % outputPrefix)
+        outputWavFN = join(outputPath, "%s.wav" % outputPrefix)
+        durationTier = dataio.PointObject(durationPointList, dataio.DURATION,
+                                          0, fromWavDuration)
+        durationTier.save(durationTierFN)
+        
+        praat_scripts.resynthesizeDuration(praatEXE,
+                                           fromWavFN,
+                                           durationTierFN,
+                                           outputWavFN,
+                                           outputMinPitch, outputMaxPitch)
+
+
+def getBareParameters(wavFN):
+    wavDuration = audio_scripts.getSoundFileDuration(wavFN)
+    return [(0, wavDuration, ''), ]
+
+
+def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
+                       outputImageFN=None, numStepsForImage=1):
+    '''
+    Get intervals for source and target audio files
+    
+    Use this information to find out how much to stretch/shrink each source
+    interval
+    '''
+    
+    if outputTGFN is not None:
+        utils.makeDir(os.path.split(outputTGFN)[0])
+    if outputImageFN is not None:
+        utils.makeDir(os.path.split(outputImageFN)[0])
+            
+    fromExtractInfo = utils.getIntervals(fromTGFN, tierName)
+    toExtractInfo = utils.getIntervals(toTGFN, tierName)
+
+    durationParameters = []
     for fromInfoTuple, toInfoTuple in zip(fromExtractInfo, toExtractInfo):
         fromStart, fromEnd = fromInfoTuple[:2]
         toStart, toEnd = toInfoTuple[:2]
@@ -142,137 +123,42 @@ def durationMorph(fromWavFN, toWavFN, tgPath, numSteps, tierName,
         ratio = (toEnd - toStart) / float((fromEnd - fromStart))
 
         ratioTuple = (fromStart, fromEnd, ratio)
-        ratioTupleList.append(ratioTuple)
-
-    interpRatioTupleList = copy.deepcopy(ratioTupleList)
-    # No need to stretch out any pauses at the beginning
-    if interpRatioTupleList[0][0] != 0:
-        tmpVar = (0, interpRatioTupleList[0][0] - PRAAT_TIME_DIFF, 1)
-        interpRatioTupleList.insert(0, tmpVar)
-
-    # Or the end
-    if interpRatioTupleList[-1][1] < fromWavDuration:
-        interpRatioTupleList.append((interpRatioTupleList[-1][1] +
-                                     PRAAT_TIME_DIFF,
-                                     fromWavDuration, 1))
-
-    # Create the praat script for doing duration manipulation
-    durationPointLine = "\tAdd point... %f (1+((%f-1)*zeroedI/(numSteps)))\n"
-#     durationPointLine = "\tAdd point... %f %f\n"
-    durationPointTextList = []
-    for start, end, ratio in interpRatioTupleList:
-        durationPointTextList.append(durationPointLine % (start, ratio))
-        durationPointTextList.append(durationPointLine % (end, ratio))
-
-    durationTierText = "".join(durationPointTextList)
+        durationParameters.append(ratioTuple)
     
-    for i in xrange(numSteps):
-#         name = 
-#         tier = 
-        praat_scripts.resynthesizeDuration(praatEXE, 
-                                           fromWavFN, 
-                                           "durationTierFN",
-                                           join(outputPath, "blah.wav"), 
-                                           outputMinPitch, outputMaxPitch)
-
-#     psolaDict = {'num_steps': numSteps,
-#                  'input_name': fromName,
-#                  'output_name': "%s_dur_%s" % (fromName, str(tierName)),
-#                  'input_dir': path,
-#                  'output_dir': outputPath,
-#                  'pitch_lower_bound': fromMinPitch,
-#                  'pitch_upper_bound': fromMaxPitch,
-#                  'durationTierPoints': durationTierText,
-#                  'start_time': 0,
-#                  'end_time': fromWavDuration,
-#                  }
-# 
-#     durationScript = common.loadPraatTemplate("psolaDurationPiecewise")
-#     durationScript %= psolaDict
-# 
-#     scriptFNFullPath = join(scriptPath, fromName)
-#     open(scriptFNFullPath, "w").write(durationScript)
-# 
-#     # Run the script
-#     print("praat %s" % scriptFNFullPath)
-#     common.runPraatScript(praatExe, scriptFNFullPath)
-
     # Create the adjusted textgrids
-    fromTG = tgio.openTextGrid(fromTGFN)
-    toTG = tgio.openTextGrid(toTGFN)
-
-    fromFN = os.path.split(fromTGFN)[1]
-    adjustedTGFN = os.path.splitext(fromFN)[0] + ".TextGrid"
-
-    adjustedTG = morphTextgridDuration(fromTG, toTG)
-    adjustedTG.save(join(outputPath, adjustedTGFN))
-
-    # Plot the results if needed
-    if plotFlag:
-
-        # Containers
-        fromDurList = []
-        toDurList = []
-        actDurList = []
-        labelList = []
-
-        # Get durations
-        for fromInfoTuple, toInfoTuple in zip(fromExtractInfo, toExtractInfo):
-            fromStart, fromEnd = fromInfoTuple[:2]
-            toStart, toEnd = toInfoTuple[:2]
-
-            labelList.append(fromInfoTuple[2])
-            fromDurList.append(fromEnd - fromStart)
-            toDurList.append(toEnd - toStart)
-
-        # Get iterpolated values
-        for i in xrange(numSteps):
-            tmpDurList = []
-            for fromStart, fromEnd, ratio in ratioTupleList:
-                dur = (fromEnd - fromStart)
-                multiplier = 1 + (((ratio - 1) * i) / (numSteps - 1))
-                tmpDurList.append(dur * multiplier)
-
-            actDurList.append(tmpDurList)
-
-        # Plot data
-        plotFN = "%s_%s.png" % (fromName, tierName)
-        plot_morphed_data.plotDuration(fromDurList, toDurList, actDurList,
-                                       labelList, join(outputPath, plotFN))
+    if outputTGFN is not None:
+        adjustedTG = textgridMorphDuration(fromTGFN,
+                                           toTGFN)
+        adjustedTG.save(outputTGFN)
+    
+    # Create the plot of the morph
+    if outputImageFN is not None:
+        _plotResults(durationParameters, fromTGFN, toTGFN,
+                     tierName, numStepsForImage,
+                     outputImageFN)
+    
+    return durationParameters
 
 
-def durationManipulation(path, fromFN, numSteps, tierName,
-                         fromMinPitch, fromMaxPitch,
-                         modFunc,
-                         praatExe,
-                         filterFunc=None,
-                         outputFolder="output"):
+def getManipulatedParamaters(tgFN, tierName, modFunc,
+                             outputTGFN=None, outputImageFN=None,
+                             numStepsForImage=1):
     '''
-    Uses praat's PSOLA algorithm to manipulation duration by modFunc amount
-
-    modFunc takes as an argument a start and end time and returns the
-    new intended start and end time (e.g. + 100 ms or * 10% etc.)
+    Get intervals for source and target audio files
+    
+    Use this information to find out how much to stretch/shrink each source
+    interval.
     '''
-
-    # By default, all regions are manipulated (except silence)
-    if filterFunc is None:
-        filterFunc = lambda x: True
-
-    # Constants
-    fromName = os.path.splitext(fromFN)[0]
-
-    fromWavDuration = audio_scripts.getSoundFileDuration(join(path, fromFN))
-
-    # Get intervals for source and target audio files
-    # Use this information to find out how much to stretch/shrink each source
-    # interval
-    if tierName is not None:
-        fromTGFN = join(path, fromName + ".TextGrid")
-        fromExtractInfo = utils.getIntervals(fromTGFN, tierName, filterFunc)
-    else:
-        fromExtractInfo = [(0, fromWavDuration, ''), ]
-
-    ratioTupleList = []
+    
+    if outputTGFN is not None:
+        utils.makeDir(os.path.split(outputTGFN)[0])
+    
+    if outputImageFN is not None:
+        utils.makeDir(os.path.split(outputTGFN)[0])
+    
+    fromExtractInfo = utils.getIntervals(tgFN, tierName)
+    
+    durationParameters = []
     for fromInfoTuple in fromExtractInfo:
         fromStart, fromEnd = fromInfoTuple[:2]
         toStart, toEnd = modFunc(fromStart, fromEnd)
@@ -286,27 +172,62 @@ def durationManipulation(path, fromFN, numSteps, tierName,
         ratio = (toEnd - toStart) / float((fromEnd - fromStart))
 
         ratioTuple = (fromStart, fromEnd, ratio)
-        ratioTupleList.append(ratioTuple)
-
-    if len(ratioTupleList) == 0:
-        raise NoLabeledRegionFoundException(fromTGFN)
-
-    _psolaDuration(ratioTupleList, fromWavDuration, PRAAT_TIME_DIFF, path,
-                   fromFN, numSteps, fromMinPitch, fromMaxPitch,
-                   outputFolder, praatExe)
-
+        durationParameters.append(ratioTuple)
+    
     # Create the adjusted textgrids
+    if outputTGFN is not None:
+        adjustedTG = textgridManipulateDuration(tgFN, modFunc)
+        adjustedTG.save(outputTGFN)
+    
+    # Create the plot of the manipulation
+    if outputTGFN is not None and outputImageFN is not None:
+        _plotResults(durationParameters, tgFN, outputTGFN,
+                     tierName, numStepsForImage,
+                     outputImageFN)
+
+    return durationParameters
+
+
+def _plotResults(durationParameters, fromTGFN, toTGFN, tierName,
+                 numSteps, outputPNGFN):
+
+    # Containers
+    fromDurList = []
+    toDurList = []
+    actDurList = []
+    labelList = []
+
+    fromExtractInfo = utils.getIntervals(fromTGFN, tierName)
+    toExtractInfo = utils.getIntervals(toTGFN, tierName)
+
+    # Get durations
+    for fromInfoTuple, toInfoTuple in zip(fromExtractInfo, toExtractInfo):
+        fromStart, fromEnd = fromInfoTuple[:2]
+        toStart, toEnd = toInfoTuple[:2]
+
+        labelList.append(fromInfoTuple[2])
+        fromDurList.append(fromEnd - fromStart)
+        toDurList.append(toEnd - toStart)
+
+    # Get iterpolated values
+    for i in xrange(numSteps):
+        tmpDurList = []
+        for fromStart, fromEnd, ratio in durationParameters:
+            dur = (fromEnd - fromStart)
+            multiplier = 1 + (((ratio - 1) * i) / (numSteps - 1))
+            tmpDurList.append(dur * multiplier)
+
+        actDurList.append(tmpDurList)
+
+    # Plot data
+    plot_morphed_data.plotDuration(fromDurList, toDurList, actDurList,
+                                   labelList, outputPNGFN)
+
+
+def textgridMorphDuration(fromTGFN, toTGFN):
+
     fromTG = tgio.openTextGrid(fromTGFN)
-
-    fromFN = os.path.split(fromTGFN)[1]
-    adjustedTGFN = os.path.splitext(fromFN)[0] + ".TextGrid"
-
-    adjustedTG = manipulateTextgridDuration(fromTG, modFunc, filterFunc)
-    adjustedTG.save(join(join(path, outputFolder), adjustedTGFN))
-
-
-def morphTextgridDuration(fromTG, toTG):
-
+    toTG = tgio.openTextGrid(toTGFN)
     adjustedTG = tgio.Textgrid()
 
     for tierName in fromTG.tierNameList:
@@ -318,7 +239,9 @@ def morphTextgridDuration(fromTG, toTG):
     return adjustedTG
 
 
-def manipulateTextgridDuration(fromTG, modFunc, filterFunc=None):
+def textgridManipulateDuration(tgFN, modFunc, filterFunc=None):
+
+    tg = tgio.openTextGrid(tgFN)
 
     # By default, all regions are manipulated (except silence)
     if filterFunc is None:
@@ -326,8 +249,8 @@ def manipulateTextgridDuration(fromTG, modFunc, filterFunc=None):
 
     adjustedTG = tgio.Textgrid()
 
-    for tierName in fromTG.tierNameList:
-        fromTier = fromTG.tierDict[tierName]
+    for tierName in tg.tierNameList:
+        fromTier = tg.tierDict[tierName]
         adjustedTier = fromTier.manipulate(modFunc, filterFunc)
         adjustedTG.addTier(adjustedTier)
 
