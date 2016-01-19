@@ -53,23 +53,27 @@ meaning being conveyed.
 ``Note that modifying pitch and duration too much can introduce artifacts. 
 Such artifacts can be heard even in pitch morphing mary1.wav to mary2.wav.``
 
-Pitch morphing:
+Pitch morphing (examples/pitch_morph_example.py):
 
-    The following image shows morphing of pitch from one speech file to another
-    in increments of 30% (33%, 66%, 100%).  Note that the morph adjusts the
+    The following image shows morphing of pitch from mary1.wav to mary2.wav
+    on a word-by-word level
+    in increments of 33% (33%, 66%, 100%).  Note that the morph adjusts the
     temporal dimension of the target signal to fit the duration of the source
-    signal.  This occurs at the level of the file unless the user specifies an
-    equal number of segments to align in time (e.g. using word-level or
-    phone-level transcriptions)
+    signal (the source and generated contours are equally shorter 
+    than the target contour).  This occurs at the level of the file unless
+    the user specifies an equal number of segments to align in time
+    (e.g. using word-level transcriptions, as done here, or phone-level
+    transcriptions, etc.)
 
 .. image:: examples/files/mary1_mary2_f0_morph.png
    :width: 500px
 
-Duration morphing:
+Duration morphing (examples/duration_manipulation_example.py):
 
-    The following image shows morphing of duration from one speech file to
-    another in increments of 30% (33%, 66%, 100%).  Can operate over an
-    entire file or, similar to pitch morphing, with annotated segments.
+    The following image shows morphing of duration from mary1.wav to mary2.wav
+    on a word-by-word basis in increments of 33% (33%, 66%, 100%).
+    This process can operate over an entire file or, similar to pitch morphing,
+    with annotated segments, as done in this example.
 
 .. image:: examples/files/mary1_mary2_dur_morph.png
    :width: 500px
