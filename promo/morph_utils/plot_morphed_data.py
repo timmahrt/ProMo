@@ -7,11 +7,25 @@ Created on Sep 18, 2013
 import math
 
 import pylab
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
+
+try:
+    import matplotlib.pyplot as plt
+    import matplotlib.cm as cm
+except ImportError:
+    hasMatplotlib = False
+else:
+    hasMatplotlib = True
+
+ 
+def _matplotlibCheck():
+    if not hasMatplotlib:
+        raise ImportError("Matplotlib required to generate plots. "
+                          "Install matplotlib or disable plotting")
 
 
 def plotSinglePitchTrack(fromTuple, fnFullPath):
+    _matplotlibCheck()
+    
     pylab.hold(True)
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -35,6 +49,8 @@ def plotSinglePitchTrack(fromTuple, fnFullPath):
 
 
 def plotTwoPitchTracks(fromTuple, toTuple, fnFullPath):
+    _matplotlibCheck()
+    
     pylab.hold(True)
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -67,6 +83,8 @@ def plotF0(fromTuple, toTuple, mergeTupleList, fnFullPath):
     '''
     Plots the original data in a graph above the plot of the dtw'ed data
     '''
+    _matplotlibCheck()
+    
     pylab.hold(True)
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -115,6 +133,8 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList,
             returnList.append(20.0 * math.log10(value))
 
         return returnList
+
+    _matplotlibCheck()
 
     fromDataList = mag2DB(fromDataList)
     toDataList = mag2DB(toDataList)
@@ -172,6 +192,8 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList,
 def plotDuration(fromDurationList, toDurationList, resultDataList,
                  labelList, fnFullPath):
 
+    _matplotlibCheck()
+
     dataList = [fromDurationList, ] + resultDataList + [toDurationList, ]
 
     # Sanity check
@@ -197,7 +219,7 @@ def plotDuration(fromDurationList, toDurationList, resultDataList,
     # Draw x ticks (iteration numbers)
     xLabelList = []
     for i in xrange(len(resultDataList)):
-        xLabelList.append(str(i))
+        xLabelList.append(str(i + 1))  # 1 based
 
     xLabelList = ["From", ] + xLabelList + ["To", ]
     iterN2 = [val + width / 2.0 for val in iterN]
