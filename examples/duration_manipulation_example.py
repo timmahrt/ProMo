@@ -8,13 +8,14 @@ import os
 from os.path import join
 
 from promo import duration_morph
+from promo.morph_utils import utils
 
 # Define the arguments for the code
 path = r"C:\Users\Tim\Dropbox\workspace\prosodyMorph\examples\files"
 praatEXE = r"C:\Praat.exe"
 minPitch = 50
 maxPitch = 350
-numSteps = 3
+stepList = utils.generateStepList(3)
 
 fromName = "mary1"
 toName = "mary2"
@@ -40,10 +41,10 @@ durationParams = duration_morph.getMorphParameters(join(path, fromTGFN),
                                                    tierName,
                                                    outputTG,
                                                    outputImageFN,
-                                                   numStepsForImage=numSteps)
+                                                   stepListForImage=stepList)
 duration_morph.changeDuration(join(path, fromWavFN),
                               durationParams,
-                              numSteps,
+                              stepList,
                               outputName,
                               outputMinPitch=minPitch,
                               outputMaxPitch=maxPitch,
@@ -59,4 +60,4 @@ durationParams = duration_morph.getManipulatedParamaters(join(path, fromTGFN),
                                                          twentyPercentMore,
                                                          outputTG,
                                                          outputImageFN,
-                                                         numSteps)
+                                                         stepList)

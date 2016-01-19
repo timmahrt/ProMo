@@ -8,7 +8,7 @@ praat.
 '''
 
 import os
-from os.path import join, splitext
+from os.path import join
 
 from praatio import tgio
 from praatio import dataio
@@ -31,7 +31,7 @@ def getPitchForIntervals(data, tgFN, tierName):
     return data
 
 
-def f0Morph(fromWavFN, fromPitchFN, toPitchFN, numSteps,
+def f0Morph(fromWavFN, pitchPath, stepList,
             outputName, doPlotPitchSteps, fromPitchData, toPitchData,
             outputMinPitch, outputMaxPitch, praatEXE):
     '''
@@ -47,10 +47,6 @@ def f0Morph(fromWavFN, fromPitchFN, toPitchFN, numSteps,
     morph_sequence.morphChunkedDataLists to morph pitch contours or
     other data.
     '''
-    pitchPath = os.path.split(fromPitchFN)[0]
-
-    fromName = splitext(os.path.split(fromPitchFN)[1])[0]
-    toName = splitext(os.path.split(toPitchFN)[1])[0]
 
     fromDuration = audio_scripts.getSoundFileDuration(fromWavFN)
 
@@ -66,7 +62,7 @@ def f0Morph(fromWavFN, fromPitchFN, toPitchFN, numSteps,
     # 2. Morph the fromData to the toData
     finalOutputList = morph_sequence.morphChunkedDataLists(fromPitchData,
                                                            toPitchData,
-                                                           numSteps)
+                                                           stepList)
 
     fromPitchData = [row for subList in fromPitchData for row in subList]
     toPitchData = [row for subList in toPitchData for row in subList]
@@ -75,7 +71,7 @@ def f0Morph(fromWavFN, fromPitchFN, toPitchFN, numSteps,
     mergedDataList = []
     for i in xrange(0, len(finalOutputList)):
         outputPitchList = finalOutputList[i]
-        stepOutputName = "%s_%d_%d" % (outputName, i + 1, numSteps)
+        stepOutputName = "%s_%0.3g" % (outputName, stepList[i])
         pitchFNFullPath = join(pitchTierPath, "%s.PitchTier" % stepOutputName)
         outputFN = join(resynthesizedPath, "%s.wav" % stepOutputName)
         pointObj = dataio.PointObject(outputPitchList, dataio.PITCH,

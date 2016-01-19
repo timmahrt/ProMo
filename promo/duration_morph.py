@@ -32,7 +32,7 @@ class NoLabeledRegionFoundException(Exception):
             self.tgFN
 
 
-def changeDuration(fromWavFN, durationParameters, numSteps, outputName,
+def changeDuration(fromWavFN, durationParameters, stepList, outputName,
                    outputMinPitch, outputMaxPitch, praatEXE):
     '''
     Uses praat to morph duration in one file to duration in another
@@ -65,14 +65,14 @@ def changeDuration(fromWavFN, durationParameters, numSteps, outputName,
                                    fromWavDuration, 1))
 
     # Create the praat script for doing duration manipulation
-    for i in xrange(numSteps):
+    for stepAmount in stepList:
         durationPointList = []
         for start, end, ratio in durationParameters:
-            percentChange = 1 + (((ratio - 1) * (i + 1)) / numSteps)
+            percentChange = 1 + (ratio - 1) * stepAmount
             durationPointList.append((start, percentChange))
             durationPointList.append((end, percentChange))
         
-        outputPrefix = "%s_%d_%d" % (outputName, i + 1, numSteps)
+        outputPrefix = "%s_%f" % (outputName, stepAmount)
         durationTierFN = join(durationTierPath,
                               "%s.DurationTier" % outputPrefix)
         outputWavFN = join(outputPath, "%s.wav" % outputPrefix)
@@ -93,7 +93,7 @@ def getBareParameters(wavFN):
 
 
 def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
-                       outputImageFN=None, numStepsForImage=1):
+                       outputImageFN=None, stepListForImage=None):
     '''
     Get intervals for source and target audio files
     
@@ -101,6 +101,8 @@ def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
     interval
     '''
     
+    if stepListForImage is None:
+        stepListForImage = [1, ]
     if outputTGFN is not None:
         utils.makeDir(os.path.split(outputTGFN)[0])
     if outputImageFN is not None:
@@ -134,7 +136,7 @@ def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
     # Create the plot of the morph
     if outputImageFN is not None:
         _plotResults(durationParameters, fromTGFN, toTGFN,
-                     tierName, numStepsForImage,
+                     tierName, stepListForImage,
                      outputImageFN)
     
     return durationParameters
@@ -142,7 +144,7 @@ def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
 
 def getManipulatedParamaters(tgFN, tierName, modFunc,
                              outputTGFN=None, outputImageFN=None,
-                             numStepsForImage=1):
+                             stepListForImage=None):
     '''
     Get intervals for source and target audio files
     
@@ -150,6 +152,8 @@ def getManipulatedParamaters(tgFN, tierName, modFunc,
     interval.
     '''
     
+    if stepListForImage is None:
+        stepListForImage = [1, ]
     if outputTGFN is not None:
         utils.makeDir(os.path.split(outputTGFN)[0])
     
@@ -182,14 +186,14 @@ def getManipulatedParamaters(tgFN, tierName, modFunc,
     # Create the plot of the manipulation
     if outputTGFN is not None and outputImageFN is not None:
         _plotResults(durationParameters, tgFN, outputTGFN,
-                     tierName, numStepsForImage,
+                     tierName, stepListForImage,
                      outputImageFN)
 
     return durationParameters
 
 
 def _plotResults(durationParameters, fromTGFN, toTGFN, tierName,
-                 numSteps, outputPNGFN):
+                 stepList, outputPNGFN):
 
     # Containers
     fromDurList = []
@@ -210,12 +214,12 @@ def _plotResults(durationParameters, fromTGFN, toTGFN, tierName,
         toDurList.append(toEnd - toStart)
 
     # Get iterpolated values
-    for i in xrange(numSteps):
+    for stepAmount in stepList:
         tmpDurList = []
         for fromStart, fromEnd, ratio in durationParameters:
             dur = (fromEnd - fromStart)
-            multiplier = 1 + (((ratio - 1) * i) / (numSteps - 1))
-            tmpDurList.append(dur * multiplier)
+            percentChange = 1 + (ratio - 1) * stepAmount
+            tmpDurList.append(dur * percentChange)
 
         actDurList.append(tmpDurList)
 

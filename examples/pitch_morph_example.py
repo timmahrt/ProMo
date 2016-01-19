@@ -5,13 +5,14 @@ from os.path import join
 from praatio import pitch_and_intensity
 
 from promo import f0_morph
+from promo.morph_utils import utils
 
 # Define the arguments for the code
 path = r"C:\Users\Tim\Dropbox\workspace\prosodyMorph\examples\files"
 praatEXE = r"C:\Praat.exe"
 minPitch = 50
 maxPitch = 350
-numSteps = 3
+stepList = utils.generateStepList(3)
 
 fromName = "mary1"
 toName = "mary2"
@@ -45,9 +46,22 @@ toPitch = f0_morph.getPitchForIntervals(toPitch, toTGFN, tierName)
 
 # Run the morph process
 f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
-                 fromPitchFN=join(path, fromPitchFN),
-                 toPitchFN=join(path, toPitchFN),
-                 numSteps=numSteps,
+                 pitchPath=path,
+                 stepList=stepList,
+                 outputName="%s_%s_f0_morph" % (fromName, toName),
+                 doPlotPitchSteps=True,
+                 fromPitchData=fromPitch,
+                 toPitchData=toPitch,
+                 outputMinPitch=minPitch,
+                 outputMaxPitch=maxPitch,
+                 praatEXE=praatEXE)
+
+# Or for more control over the steps:
+stepList = [0.10, ]  # 10% morph
+# Run the morph process
+f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
+                 pitchPath=path,
+                 stepList=stepList,
                  outputName="%s_%s_f0_morph" % (fromName, toName),
                  doPlotPitchSteps=True,
                  fromPitchData=fromPitch,

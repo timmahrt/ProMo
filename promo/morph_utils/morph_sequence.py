@@ -116,9 +116,12 @@ def _alignDataPoints(fromList, toList):
     return indexList
 
 
-def morphDataLists(fromList, toList, numSteps):
+def morphDataLists(fromList, toList, stepList):
     '''
-    Iteratively morph fromList into toList in numSteps steps
+    Iteratively morph fromList into toList using the values 0 to 1 in stepList
+    
+    stepList: a value of 0 means no change and a value of 1 means a complete
+    change to the other value
     '''
 
     # If there are more than 1 pitch value, then we align the data in
@@ -137,7 +140,7 @@ def morphDataLists(fromList, toList, numSteps):
     indexList = _alignDataPoints(fromListRel, toListRel)
     alignedToPitchRel = [toListRel[i] for i in indexList]
 
-    for i in xrange(numSteps):
+    for stepAmount in stepList:
         newPitchList = []
 
         # Perform the interpolation
@@ -145,24 +148,19 @@ def morphDataLists(fromList, toList, numSteps):
             fromTime, fromValue = fromTuple
             toTime, toValue = toTuple
 
-            if numSteps > 1:
-                # i + 1 b/c i_0 = 0 = no change
-                iterVal = (i + 1) / float(numSteps)
-                newValue = fromValue + (iterVal * (toValue - fromValue))
-                newTime = fromTime + (iterVal * (toTime - fromTime))
-            else:
-                newValue = toValue
-                newTime = toTime
+            # i + 1 b/c i_0 = 0 = no change
+            newValue = fromValue + (stepAmount * (toValue - fromValue))
+            newTime = fromTime + (stepAmount * (toTime - fromTime))
 
             newPitchList.append((newTime, newValue))
 
         newPitchList = _makeTimingAbsolute(newPitchList, fromStartTime,
                                            fromEndTime)
 
-        yield i, newPitchList
+        yield stepAmount, newPitchList
 
 
-def morphChunkedDataLists(fromDataList, toDataList, numSteps):
+def morphChunkedDataLists(fromDataList, toDataList, stepList):
     '''
     Morph one set of data into another, in a stepwise fashion
 
@@ -183,8 +181,8 @@ def morphChunkedDataLists(fromDataList, toDataList, numSteps):
         if (len(x) < 2) or (len(y) < 2):
             continue
 
-        tmpList = [outputPitchList for i, outputPitchList
-                   in morphDataLists(x, y, numSteps)]
+        tmpList = [outputPitchList for _, outputPitchList
+                   in morphDataLists(x, y, stepList)]
         outputList.append(tmpList)
 
     # Transpose list

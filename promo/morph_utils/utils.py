@@ -31,3 +31,14 @@ def makeDir(path):
     
     if not os.path.exists(path):
         os.mkdir(path)
+        
+
+def generateStepList(numSteps):
+    
+    assert(numSteps > 0)
+    
+    stepList = []
+    for i in xrange(numSteps):
+        stepList.append((i + 1) / float((numSteps)))
+        
+    return stepList
