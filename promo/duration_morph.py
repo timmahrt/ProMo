@@ -72,7 +72,7 @@ def changeDuration(fromWavFN, durationParameters, stepList, outputName,
             durationPointList.append((start, percentChange))
             durationPointList.append((end, percentChange))
         
-        outputPrefix = "%s_%f" % (outputName, stepAmount)
+        outputPrefix = "%s_%0.3g" % (outputName, stepAmount)
         durationTierFN = join(durationTierPath,
                               "%s.DurationTier" % outputPrefix)
         outputWavFN = join(outputPath, "%s.wav" % outputPrefix)
