@@ -8,8 +8,14 @@ from promo import f0_morph
 from promo.morph_utils import utils
 
 # Define the arguments for the code
+# Windows paths
 path = r"C:\Users\Tim\Dropbox\workspace\prosodyMorph\examples\files"
 praatEXE = r"C:\Praat.exe"
+
+# Mac paths
+path = "/Users/tmahrt/Dropbox/workspace/prosodyMorph/examples/files"
+praatEXE = "/Applications/Praat.app/Contents/MacOS/Praat"
+
 minPitch = 50
 maxPitch = 350
 stepList = utils.generateStepList(3)
