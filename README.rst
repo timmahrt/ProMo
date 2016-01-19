@@ -33,6 +33,26 @@ Apply the pitch or duration from one speech sample to another.
 
 - plots of the resynthesis (such as the ones below) can be generated
 
+Illustrative example
+======================
+
+Consider the phrase "Mary rolled the barrel".  In the first recording
+(examples/mary1.wav), "Mary rolled the barrel" was said in response
+to a question such as "Did John roll the barrel?".  On the other hand,
+in the second recording (examples/mary2.wav) the utterance was said 
+in response to a question such as "What happened yesterday".
+
+"Mary" in "mary1.wav" is produced with more emphasis than in "mary2.wav".
+It is longer and carries a more drammatic pitch excursion.  Using 
+ProMo, we can make mary1.wav spoken similar to mary2.wav, even
+though they were spoken in a different way and by different speakers.
+
+Duration and pitch carry meaning.  Change these, and you can change the
+meaning being conveyed.
+
+  Note that modifying pitch and duration too much can introduce artifacts. 
+  Such artifacts can be heard even in pitch morphing mary1.wav to mary2.wav.
+
 Pitch morphing:
 
     The following image shows morphing of pitch from one speech file to another
@@ -43,7 +63,7 @@ Pitch morphing:
     phone-level transcriptions)
 
 .. image:: examples/files/mary1_mary2_f0_morph.png
-    :width: 650
+   :width: 500px
 
 Duration morphing:
 
@@ -52,7 +72,7 @@ Duration morphing:
     entire file or, similar to pitch morphing, with annotated segments.
 
 .. image:: examples/files/mary1_mary2_dur_morph.png
-    :width: 650
+   :width: 500px
 
     
 Major revisions
