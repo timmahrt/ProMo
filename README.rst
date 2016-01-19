@@ -16,13 +16,30 @@ Common Use Cases
 
 What can you do with this library?
 
+Apply the pitch or duration from one speech sample to another.
 
+- pitch alignment happens both in time and in amount
 
+- morphing is granular (10%, 50%, 100%, 150%, etc. of target)
+
+Pitch morphing:
+
+image:: /examples/files/mary1_mary2_f0_morph.png
+
+Duration morphing:
+
+image:: /examples/files/mary1_mary2_dur_morph.png
 
 Major revisions
 ================
 
+Ver 1.0 (January 19, 2016)
 
+- first public release.
+
+Beta (July 1, 2013)
+
+- first version which was utilized in the my dissertation work
 
 
 Requirements
