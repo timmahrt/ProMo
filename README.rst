@@ -50,8 +50,8 @@ though they were spoken in a different way and by different speakers.
 Duration and pitch carry meaning.  Change these, and you can change the
 meaning being conveyed.
 
-  Note that modifying pitch and duration too much can introduce artifacts. 
-  Such artifacts can be heard even in pitch morphing mary1.wav to mary2.wav.
+``Note that modifying pitch and duration too much can introduce artifacts. 
+Such artifacts can be heard even in pitch morphing mary1.wav to mary2.wav.``
 
 Pitch morphing:
 
