@@ -24,15 +24,11 @@ Apply the pitch or duration from one speech sample to another.
 
 Pitch morphing:
 
-image:: examples/files/mary1_mary2_f0_morph.png
-
-[Pitch morphing](examples/files/mary1_mary2_f0_morph.png)
+.. image:: examples/files/mary1_mary2_f0_morph.png
 
 Duration morphing:
 
-image:: examples/files/mary1_mary2_dur_morph.png
-
-[Duration morphing](examples/files/mary1_mary2_dur_morph.png)
+.. image:: examples/files/mary1_mary2_dur_morph.png
 
 Major revisions
 ================
