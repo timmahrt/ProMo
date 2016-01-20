@@ -10,6 +10,8 @@ This library can be used to resynthesize pitch in natural speech using pitch
 contours taken from other speech samples, generated pitch contours,
 or through algorithmic manipulations of the source pitch contour.
 
+.. sectnum::
+.. contents::
 
 Common Use Cases
 ================
@@ -18,13 +20,32 @@ What can you do with this library?
 
 Apply the pitch or duration from one speech sample to another.
 
-- alignment happens both in time and in amount
+- alignment happens both in time and in hertz
 
-    - for many applications the temporal quality won't matter, but for 
-      situations with stylized pitch, etc. where there are few data points, 
-      data points (and thus pitch events) will move in time.
+    - after the morph process, the source pitch points will be at the same
+      absolute pitch and relative time as they are in the target file 
+      
+    - time is relative to the start and stop time of the interval being
+      considered (e.g. the pitch value at 80% of the duration of the interval).
+      Relative time is used so that the source and target files don't have to
+      be the same length.
 
-- morphing is granular (10%, 50%, 100%, 150%, etc. of target)
+    - temporal morphing is a minor effect if the sampling frequency is high
+      but it can be significant when, for example, using a stylized pitch
+      contour with few pitch samples.
+
+- modifications can be done between entire wav files or between
+  corresponding intervals as specified in a textgrid or other annotation
+  (indicating the boundaries of words, stressed vowels, etc.)
+
+    - the larger the file, the less useful the results are likely to be
+      without using a transcript of some sort
+      
+    - the transcripts do not have to match in lexical content, only in the
+      number of intervals  (same number of words or phones, etc.)
+
+- modifications can be scaled (it is possible to generate a wav file with
+  a pitch contour that is 30% or 60% between the source and target contours).
 
 - resynthesis is performed by Praat.
 
@@ -32,6 +53,7 @@ Apply the pitch or duration from one speech sample to another.
   or from other sources (e.g. ESPS getF0)
 
 - plots of the resynthesis (such as the ones below) can be generated
+
 
 Illustrative example
 ======================
@@ -121,3 +143,12 @@ Navigate to the directory this is located in and type::
 If python is not in your path, you'll need to enter the full path e.g.::
 
     C:\Python27\python.exe setup.py install
+
+
+Citing ProMo
+===============
+
+If you use ProMo in your research, please cite it like so:
+
+Tim Mahrt. ProMo: The Prosody-Morphing Library.
+https://github.com/timmahrt/ProMo, 2016.
