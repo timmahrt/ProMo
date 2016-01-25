@@ -152,3 +152,13 @@ If you use ProMo in your research, please cite it like so:
 
 Tim Mahrt. ProMo: The Prosody-Morphing Library.
 https://github.com/timmahrt/ProMo, 2016.
+
+
+Acknowledgements
+================
+
+Development of ProMo was possible thanks to NSF grant <b>BCS 12-51343</b> to
+Jennifer Cole, José I. Hualde, and Caroline Smith and to the A*MIDEX project
+(n° <b>ANR-11-IDEX-0001-02</b>) to James Sneed German funded by the
+Investissements d’Avenir French Government program,
+managed by the French National Research Agency (ANR).
