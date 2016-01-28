@@ -74,8 +74,8 @@ def f0Morph(fromWavFN, pitchPath, stepList,
         stepOutputName = "%s_%0.3g" % (outputName, stepList[i])
         pitchFNFullPath = join(pitchTierPath, "%s.PitchTier" % stepOutputName)
         outputFN = join(resynthesizedPath, "%s.wav" % stepOutputName)
-        pointObj = dataio.PointObject(outputPitchList, dataio.PITCH,
-                                      0, fromDuration)
+        pointObj = dataio.PointObject2D(outputPitchList, dataio.PITCH,
+                                        0, fromDuration)
         pointObj.save(pitchFNFullPath)
 
         outputTime, outputVals = zip(*outputPitchList)

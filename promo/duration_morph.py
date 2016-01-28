@@ -76,8 +76,8 @@ def changeDuration(fromWavFN, durationParameters, stepList, outputName,
         durationTierFN = join(durationTierPath,
                               "%s.DurationTier" % outputPrefix)
         outputWavFN = join(outputPath, "%s.wav" % outputPrefix)
-        durationTier = dataio.PointObject(durationPointList, dataio.DURATION,
-                                          0, fromWavDuration)
+        durationTier = dataio.PointObject2D(durationPointList, dataio.DURATION,
+                                            0, fromWavDuration)
         durationTier.save(durationTierFN)
         
         praat_scripts.resynthesizeDuration(praatEXE,
