@@ -126,7 +126,7 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList,
         stepSize = 500
 
         returnList = []
-        for i in xrange(int(math.ceil(len(valueList) / float(stepSize)))):
+        for i in range(int(math.ceil(len(valueList) / float(stepSize)))):
             subList = valueList[i * stepSize:(i + 1) * stepSize]
             value = math.sqrt(sum([val ** 2 for val in subList]))
 
@@ -170,7 +170,7 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList,
 
         colorValue += colorStep
         hexValue = "#%02x0000" % int(255 - colorValue)
-        xValues = [i for i in xrange(len(valueList))]
+        xValues = [i for i in range(len(valueList))]
         if colorValue == 255.0:
             plot3 = ax0.plot(xValues, valueList, color=hexValue, linewidth=1,
                              label="Merged line")
@@ -178,7 +178,7 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList,
             plot3 = ax0.plot(xValues, valueList, color=hexValue, linewidth=1)
 
     controlPoints = mag2DB(controlPoints)
-    xValues = [i for i in xrange(len(controlPoints))]
+    xValues = [i for i in range(len(controlPoints))]
     ax0.scatter(xValues, controlPoints, color='pink', label="Control points")
 
     plt.legend(loc=1,
@@ -218,7 +218,7 @@ def plotDuration(fromDurationList, toDurationList, resultDataList,
 
     # Draw x ticks (iteration numbers)
     xLabelList = []
-    for i in xrange(len(resultDataList)):
+    for i in range(len(resultDataList)):
         xLabelList.append(str(i + 1))  # 1 based
 
     xLabelList = ["From", ] + xLabelList + ["To", ]

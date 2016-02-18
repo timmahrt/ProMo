@@ -69,7 +69,7 @@ def f0Morph(fromWavFN, pitchPath, stepList,
 
     # 3. Save the pitch data and resynthesize the pitch
     mergedDataList = []
-    for i in xrange(0, len(finalOutputList)):
+    for i in range(0, len(finalOutputList)):
         outputPitchList = finalOutputList[i]
         stepOutputName = "%s_%0.3g" % (outputName, stepList[i])
         pitchFNFullPath = join(pitchTierPath, "%s.PitchTier" % stepOutputName)
