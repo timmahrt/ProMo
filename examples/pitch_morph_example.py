@@ -46,7 +46,7 @@ toPitch = [(time, pitch) for time, pitch, _ in toPitch]
 
 # 3rd select which sections to align.
 # We'll use textgrids for this purpose.
-tierName = "TokensAlign"
+tierName = "PhonAlign"
 fromPitch = f0_morph.getPitchForIntervals(fromPitch, fromTGFN, tierName)
 toPitch = f0_morph.getPitchForIntervals(toPitch, toTGFN, tierName)
 
@@ -75,3 +75,58 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  outputMinPitch=minPitch,
                  outputMaxPitch=maxPitch,
                  praatEXE=praatEXE)
+
+# And we can reset the speaker's pitch range and mean pitch back to their own
+stepList = [1.0, ]
+
+f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
+                 pitchPath=path,
+                 stepList=stepList,
+                 outputName="%s_%s_f0_morph_w_average" % (fromName, toName),
+                 doPlotPitchSteps=True,
+                 fromPitchData=fromPitch,
+                 toPitchData=toPitch,
+                 outputMinPitch=minPitch,
+                 outputMaxPitch=maxPitch,
+                 praatEXE=praatEXE,
+                 keepPitchRange=False,
+                 keepAveragePitch=True)
+
+f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
+                 pitchPath=path,
+                 stepList=stepList,
+                 outputName="%s_%s_f0_morph_w_range" % (fromName, toName),
+                 doPlotPitchSteps=True,
+                 fromPitchData=fromPitch,
+                 toPitchData=toPitch,
+                 outputMinPitch=minPitch,
+                 outputMaxPitch=maxPitch,
+                 praatEXE=praatEXE,
+                 keepPitchRange=True,
+                 keepAveragePitch=False)
+
+f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
+                 pitchPath=path,
+                 stepList=stepList,
+                 outputName="%s_%s_f0_morph_w_range_and_average" % (fromName, toName),
+                 doPlotPitchSteps=True,
+                 fromPitchData=fromPitch,
+                 toPitchData=toPitch,
+                 outputMinPitch=minPitch,
+                 outputMaxPitch=maxPitch,
+                 praatEXE=praatEXE,
+                 keepPitchRange=True,
+                 keepAveragePitch=True)
+
+f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
+                 pitchPath=path,
+                 stepList=stepList,
+                 outputName="%s_%s_f0_morph_w_regular" % (fromName, toName),
+                 doPlotPitchSteps=True,
+                 fromPitchData=fromPitch,
+                 toPitchData=toPitch,
+                 outputMinPitch=minPitch,
+                 outputMaxPitch=maxPitch,
+                 praatEXE=praatEXE,
+                 keepPitchRange=False,
+                 keepAveragePitch=False)

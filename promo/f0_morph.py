@@ -33,7 +33,8 @@ def getPitchForIntervals(data, tgFN, tierName):
 
 def f0Morph(fromWavFN, pitchPath, stepList,
             outputName, doPlotPitchSteps, fromPitchData, toPitchData,
-            outputMinPitch, outputMaxPitch, praatEXE):
+            outputMinPitch, outputMaxPitch, praatEXE, keepPitchRange=False,
+            keepAveragePitch=False):
     '''
     Resynthesizes the pitch track from a source to a target wav file
 
@@ -46,6 +47,10 @@ def f0Morph(fromWavFN, pitchPath, stepList,
     This function can act as a template for how to use the function
     morph_sequence.morphChunkedDataLists to morph pitch contours or
     other data.
+    
+    By default, everything is morphed, but it is possible to maintain elements
+    of the original speaker's pitch (average pitch and pitch range) by setting
+    the appropriate flag)
     '''
 
     fromDuration = audio_scripts.getSoundFileDuration(fromWavFN)
@@ -70,15 +75,26 @@ def f0Morph(fromWavFN, pitchPath, stepList,
     # 3. Save the pitch data and resynthesize the pitch
     mergedDataList = []
     for i in range(0, len(finalOutputList)):
-        outputPitchList = finalOutputList[i]
+        
+        outputDataList = finalOutputList[i]
+        
+        if keepPitchRange is True:
+            outputDataList = morph_sequence.morphRange(outputDataList,
+                                                        fromPitchData)
+            
+        if keepAveragePitch is True:
+            outputDataList = morph_sequence.morphAveragePitch(outputDataList,
+                                                               fromPitchData)
+        
+
         stepOutputName = "%s_%0.3g" % (outputName, stepList[i])
         pitchFNFullPath = join(pitchTierPath, "%s.PitchTier" % stepOutputName)
         outputFN = join(resynthesizedPath, "%s.wav" % stepOutputName)
-        pointObj = dataio.PointObject2D(outputPitchList, dataio.PITCH,
+        pointObj = dataio.PointObject2D(outputDataList, dataio.PITCH,
                                         0, fromDuration)
         pointObj.save(pitchFNFullPath)
 
-        outputTime, outputVals = zip(*outputPitchList)
+        outputTime, outputVals = zip(*outputDataList)
         mergedDataList.append((outputTime, outputVals))
         
         praat_scripts.resynthesizePitch(praatEXE, fromWavFN, pitchFNFullPath,
@@ -87,6 +103,7 @@ def f0Morph(fromWavFN, pitchPath, stepList,
 
     # 4. (Optional) Plot the generated contours
     if doPlotPitchSteps:
+
         fromTime, fromVals = zip(*fromPitchData)
         toTime, toVals = zip(*toPitchData)
 

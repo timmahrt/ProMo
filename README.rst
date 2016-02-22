@@ -50,6 +50,8 @@ Apply the pitch or duration from one speech sample to another.
 - modifications can be scaled (it is possible to generate a wav file with
   a pitch contour that is 30% or 60% between the source and target contours).
 
+- can also morph the pitch range and average pitch independently.
+  
 - resynthesis is performed by Praat.
 
 - pitch can be obtained from praat (such as by using praatio)
@@ -93,6 +95,38 @@ Pitch morphing (examples/pitch_morph_example.py):
 .. image:: examples/files/mary1_mary2_f0_morph.png
    :width: 500px
 
+With the ability to morph pitch range and average pitch, it becomes easier
+to morph contours produced by different speakers:
+
+    The following image shows four different pitch manipulations.  On the 
+    **upper left** is the raw morph.  Notice that final output (black line) is
+    very close to the target.  Differences stem from duration differences.
+    
+    However, the average pitch and pitch range are qualities of speech that
+    can signify differences in gender in addition to other aspects of
+    speaker identity.  By resetting the average pitch and pitch range to
+    that of the source, it is possible to morph the contour while maintaining
+    aspects of the source speaker's identity.
+    
+    The image in the **upper right** contains a morph
+    followed by a reset of the average pitch to the source speaker's average
+    pitch.  In the **bottom right** a morph followed by a rest of the speaker's
+    pitch range.  In the **bottom right** pitch range was reset and then the
+    speaker's average pitch was reset.
+    
+    The longer the speech sample, the more representative the pitch range and
+    mean pitch will be of the speaker.  In this example both are skewed  higher
+    by the pitch accent on the first word.
+
+    Here the average pitch of the source (a female speaker) is much higher
+    than the target (a male speaker) and the resulting morph sounds like it
+    comes from a different speaker than the source or target speakers.
+    The three recordings that involve resetting pitch range and/or average
+    pitch sound much more natural.
+
+.. image:: examples/files/mary1_mary2_f0_morph_compare.png
+   :width: 500px
+   
 Duration morphing (examples/duration_manipulation_example.py):
 
     The following image shows morphing of duration from mary1.wav to mary2.wav
@@ -103,9 +137,13 @@ Duration morphing (examples/duration_manipulation_example.py):
 .. image:: examples/files/mary1_mary2_dur_morph.png
    :width: 500px
 
+
     
 Major revisions
 ================
+
+Ver 1.1 (February 22, 2016)
+- f0 morph code for modifying speaker pitch range and average pitch
 
 Ver 1.0 (January 19, 2016)
 

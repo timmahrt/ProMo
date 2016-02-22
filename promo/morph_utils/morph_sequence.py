@@ -226,3 +226,71 @@ def morphChunkedDataLists(fromDataList, toDataList, stepList):
             finalOutputList[i].extend(subsubList)
 
     return finalOutputList
+
+
+def morphAveragePitch(fromDataList, toDataList):
+    '''
+    Adjusts the values in fromPitchList to have the same average as toPitchList
+    
+    Because other manipulations can alter the average pitch, morphing the pitch
+    is the last pitch manipulation that should be done
+    '''
+    timeList, fromPitchList = zip(*fromDataList)
+    toPitchList = [pitchVal for _, pitchVal in toDataList]
+    
+    fromListNoZeroes = [val for val in fromPitchList if val > 0]
+    fromAverage = sum(fromListNoZeroes) / float(len(fromListNoZeroes))
+    
+    toListNoZeroes = [val for val in toPitchList if val > 0]
+    toAverage = sum(toListNoZeroes) / float(len(toListNoZeroes))
+    
+    adjustFactor = toAverage - fromAverage
+    newPitchList = [val + adjustFactor if val > 0 else 0
+                    for val in fromPitchList]
+    
+    outputListNoZeroes = [val for val in newPitchList if val > 0]
+    finalAverage = sum(outputListNoZeroes) / float(len(outputListNoZeroes))
+    
+    retDataList = [(time, pitchVal) for time, pitchVal
+                   in zip(timeList, newPitchList)]
+    
+    return retDataList
+
+
+def morphRange(fromDataList, toDataList):
+    '''
+    Changes the scale of values in one distribution to that of another
+    
+    ie The maximum value in fromDataList will be set to the maximum value in
+    toDataList.  The 75% largest value in fromDataList will be set to the
+    75% largest value in toDataList, etc.
+    
+    Small sample sizes will yield results that are not very meaningful
+    '''
+    
+    # Isolate and sort pitch values
+    fromPitchList = [dataTuple[1] for dataTuple in fromDataList]
+    toPitchList = [dataTuple[1] for dataTuple in toDataList]
+    
+    fromPitchListSorted = sorted(fromPitchList)
+    toPitchListSorted = sorted(toPitchList)
+    
+    # Bin pitch values between 0 and 1
+    fromListRel = makeSequenceRelative(fromPitchListSorted)[0]
+    toListRel = makeSequenceRelative(toPitchListSorted)[0]
+    
+    # Find each values closest equivalent in the other list
+    indexList = _getNearestMappingIndexList(fromListRel, toListRel)
+    
+    # Map the source pitch to the target pitch value
+    # Pitch value -> get sorted position -> get corresponding position in
+    # target list -> get corresponding pitch value = the new pitch value
+    retList = []
+    for time, pitch in fromDataList:
+        fromI = fromPitchListSorted.index(pitch)
+        toI = indexList[fromI]
+        newPitch = toPitchListSorted[toI]
+        
+        retList.append((time, newPitch))
+    
+    return retList
