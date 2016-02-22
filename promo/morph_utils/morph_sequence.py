@@ -95,22 +95,54 @@ def _makeTimingAbsolute(relativeDataList, startTime, endTime):
     return absDataList
 
 
-def _alignDataPoints(fromList, toList):
+def _getSmallestDifference(inputList, targetVal):
     '''
-    Finds the indicies for data points that are closest to each other in time.
+    Returns the value in inputList that is closest to targetVal
+    
+    Iteratively splits the dataset in two, so it should be pretty fast
+    '''
+    targetList = inputList[:]
+    retVal = None
+    while True:
+        # If we're down to one value, stop iterating
+        if len(targetList) == 1:
+            retVal = targetList[0]
+            break
+        halfPoint = int(len(targetList) / 2.0) - 1
+        a = targetList[halfPoint]
+        b = targetList[halfPoint + 1]
+        
+        leftDiff = abs(targetVal - a)
+        rightDiff = abs(targetVal - b)
+        
+        # If the distance is 0, stop iterating, the targetVal is present
+        # in the inputList
+        if leftDiff == 0 or rightDiff == 0:
+            retVal = targetVal
+            break
+        
+        # Look at left half or right half
+        if leftDiff < rightDiff:
+            targetList = targetList[:halfPoint + 1]
+        else:
+            targetList = targetList[halfPoint + 1:]
+         
+    return retVal
+        
+    
+def _getNearestMappingIndexList(fromValList, toValList):
+    '''
+    Finds the indicies for data points that are closest to each other.
 
     The inputs should be in relative time, scaled from 0 to 1
+    e.g. if you have [0, .1, .5., .9] and [0, .1, .2, 1]
+    will output [0, 1, 1, 2]
     '''
 
-    fromTimeList = [dataTuple[0] for dataTuple in fromList]
-    toTimeList = [dataTuple[0] for dataTuple in toList]
-
     indexList = []
-    for fromTimestamp in fromTimeList:
-        timeDiffList = [abs(toTimestamp - fromTimestamp)
-                        for toTimestamp in toTimeList]
-        smallestDiff = min(timeDiffList)
-        i = timeDiffList.index(smallestDiff)
+    for fromTimestamp in fromValList:
+        smallestDiff = _getSmallestDifference(toValList, fromTimestamp)
+        i = toValList.index(smallestDiff)
         indexList.append(i)
 
     return indexList
@@ -137,7 +169,9 @@ def morphDataLists(fromList, toList, stepList):
 
     # If fromList has more points, we'll have flat areas
     # If toList has more points, we'll might miss peaks or valleys
-    indexList = _alignDataPoints(fromListRel, toListRel)
+    fromTimeList = [dataTuple[0] for dataTuple in fromListRel]
+    toTimeList = [dataTuple[0] for dataTuple in toListRel]
+    indexList = _getNearestMappingIndexList(fromTimeList, toTimeList)
     alignedToPitchRel = [toListRel[i] for i in indexList]
 
     for stepAmount in stepList:
