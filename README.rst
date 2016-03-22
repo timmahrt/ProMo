@@ -202,7 +202,7 @@ Acknowledgements
 ================
 
 Development of ProMo was possible thanks to NSF grant **BCS 12-51343** to
-Jennifer Cole, José I. Hualde, and Caroline Smith and to the A*MIDEX project
-(n° **ANR-11-IDEX-0001-02**) to James Sneed German funded by the
-Investissements d’Avenir French Government program,
+Jennifer Cole, JosÃ© I. Hualde, and Caroline Smith and to the A*MIDEX project
+(nÂ° **ANR-11-IDEX-0001-02**) to James Sneed German funded by the
+Investissements d'Avenir French Government program,
 managed by the French National Research Agency (ANR).
