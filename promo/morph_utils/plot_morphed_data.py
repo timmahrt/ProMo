@@ -6,8 +6,6 @@ Created on Sep 18, 2013
 
 import math
 
-import pylab
-
 try:
     import matplotlib.pyplot as plt
     import matplotlib.cm as cm
@@ -26,7 +24,7 @@ def _matplotlibCheck():
 def plotSinglePitchTrack(fromTuple, fnFullPath):
     _matplotlibCheck()
     
-    pylab.hold(True)
+    plt.hold(True)
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
@@ -34,9 +32,7 @@ def plotSinglePitchTrack(fromTuple, fnFullPath):
 
     # Old data
     plot1 = ax0.plot(fromTuple, color='red', linewidth=2,
-                     # label="From"
                      )
-#     ax0.set_title("Plot of F0 Merge")
 
     plt.ylabel('Pitch (Hz)')
     plt.xlabel('Sample number')
@@ -44,14 +40,14 @@ def plotSinglePitchTrack(fromTuple, fnFullPath):
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 #     plt.legend([plot1, plot2, plot3], ["From", "To", "Merged line"])
 
-    pylab.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    pylab.close()
+    plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
+    plt.close()
 
 
 def plotTwoPitchTracks(fromTuple, toTuple, fnFullPath):
     _matplotlibCheck()
     
-    pylab.hold(True)
+    plt.hold(True)
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
@@ -75,8 +71,8 @@ def plotTwoPitchTracks(fromTuple, toTuple, fnFullPath):
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 #     plt.legend([plot1, plot2, plot3], ["From", "To", "Merged line"])
 
-    pylab.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    pylab.close()
+    plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
+    plt.close()
 
 
 def plotF0(fromTuple, toTuple, mergeTupleList, fnFullPath):
@@ -85,7 +81,7 @@ def plotF0(fromTuple, toTuple, mergeTupleList, fnFullPath):
     '''
     _matplotlibCheck()
     
-    pylab.hold(True)
+    plt.hold(True)
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
@@ -115,8 +111,8 @@ def plotF0(fromTuple, toTuple, mergeTupleList, fnFullPath):
     plt.legend(loc=1, borderaxespad=0.)
 #     plt.legend([plot1, plot2, plot3], ["From", "To", "Merged line"])
 
-    pylab.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    pylab.close()
+    plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
+    plt.close()
 
 
 def plotIntensity(fromDataList, toDataList, mergeTupleList,
@@ -142,7 +138,7 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList,
     print(max(fromDataList))
     print(max(toDataList))
 
-    pylab.hold(True)
+    plt.hold(True)
 
     fig, ax0 = plt.subplots(nrows=1)
 #     fig, (ax0, ax1, ax2) = plt.subplots(nrows=3)
@@ -185,8 +181,8 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList,
                # bbox_to_anchor=(1.05, 1), loc=2,
                borderaxespad=0.)
 
-    pylab.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    pylab.close()
+    plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
+    plt.close()
 
 
 def plotDuration(fromDurationList, toDurationList, resultDataList,
@@ -207,7 +203,7 @@ def plotDuration(fromDurationList, toDurationList, resultDataList,
     iterN = range(n)
 
     # Pre-plotting work
-    pylab.hold(True)
+    plt.hold(True)
     _, ax0 = plt.subplots(nrows=1)
 
     # Labels
@@ -250,5 +246,5 @@ def plotDuration(fromDurationList, toDurationList, resultDataList,
     ax0.axhline(bottom[0], color="black")
 
     # Save and cleanup
-    pylab.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    pylab.close()
+    plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
+    plt.close()

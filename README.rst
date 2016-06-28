@@ -110,12 +110,12 @@ to morph contours produced by different speakers:
     
     The image in the **upper right** contains a morph
     followed by a reset of the average pitch to the source speaker's average
-    pitch.  In the **bottom right** a morph followed by a rest of the speaker's
+    pitch.  In the **bottom right** a morph followed by a reset of the speaker's
     pitch range.  In the **bottom right** pitch range was reset and then the
     speaker's average pitch was reset.
     
     The longer the speech sample, the more representative the pitch range and
-    mean pitch will be of the speaker.  In this example both are skewed  higher
+    mean pitch will be of the speaker.  In this example both are skewed higher
     by the pitch accent on the first word.
 
     Here the average pitch of the source (a female speaker) is much higher
@@ -143,6 +143,7 @@ Major revisions
 ================
 
 Ver 1.1 (February 22, 2016)
+
 - f0 morph code for modifying speaker pitch range and average pitch
 
 Ver 1.0 (January 19, 2016)
