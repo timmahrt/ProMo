@@ -166,7 +166,22 @@ My praatIO library is used extensively and can be downloaded
 `here <https://github.com/timmahrt/praatIO>`_
 
 Matplotlib is needed if you want to plot graphs.
-`Matplotlib download <http://matplotlib.org/>`_
+`Matplotlib website <http://matplotlib.org/>`_
+
+Matplotlib is non-trivial to install, as it depends on several large packages.  You can
+visit the website for more information.  **I recommend the following instructions to
+install matplotlib** which uses *python wheels*.  These will install all required
+libraries in one fell swoop.
+
+On Mac:
+
+    sudo python -m pip install matplotlib
+    
+On Windows, open a cmd or powershell window and type:
+
+    <<path to python>> -m install matplotlib
+    
+    e.g. C:\\python27\\python.exe -m install matplotlib
 
 
 Usage
