@@ -173,7 +173,7 @@ visit the website for more information.  **I recommend the following instruction
 install matplotlib** which uses *python wheels*.  These will install all required
 libraries in one fell swoop.
 
-On Mac:
+On Mac, open a terminal and type:
 
     sudo python -m pip install matplotlib
     
