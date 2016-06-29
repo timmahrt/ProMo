@@ -168,8 +168,14 @@ My praatIO library is used extensively and can be downloaded
 Matplotlib is needed if you want to plot graphs.
 `Matplotlib website <http://matplotlib.org/>`_
 
-Matplotlib is non-trivial to install, as it depends on several large packages.  You can
-visit the website for more information.  **I recommend the following instructions to
+Scipy is needed if you want to use interpolation--typically if you have stylized
+pitch contours (in praat PitchTier format, for example) that you want to use in
+your morphing).
+`Matplotlib website <http://scipy.org/>`_
+
+Matplotlib and SciPy are non-trivial to install, as they depends on several large
+packages.  You can
+visit their websites for more information.  **I recommend the following instructions to
 install matplotlib** which uses *python wheels*.  These will install all required
 libraries in one fell swoop.
 
@@ -177,9 +183,13 @@ On Mac, open a terminal and type:
 
     sudo python -m pip install matplotlib
     
+    sudo python -m pip install scipy
+    
 On Windows, open a cmd or powershell window and type:
 
     <<path to python>> -m install matplotlib
+    
+    <<path to python>> -m install scipy
     
     e.g. C:\\python27\\python.exe -m install matplotlib
 

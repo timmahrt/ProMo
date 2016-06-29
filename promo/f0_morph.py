@@ -7,7 +7,6 @@ Contains utilities for extracting, creating, and manipulating pitch files in
 praat.
 '''
 
-import os
 from os.path import join
 
 from praatio import tgio
@@ -18,6 +17,18 @@ from promo.morph_utils import utils
 from promo.morph_utils import audio_scripts
 from promo.morph_utils import plot_morphed_data
 from promo.morph_utils import morph_sequence
+
+
+class MissingPitchDataException(Exception):
+        
+    def __str__(self):
+        txt = ("\n\nNo data points available in a region for morphing.\n"
+               "Two data points are needed in each region to do the morph\n"
+               "Regions with fewer than two samples are skipped, which "
+               "should be fine for some cases (e.g. unvoiced segments).\n"
+               "If you need more data points, see "
+               "promo.morph_utils.interpolation")
+        return txt
 
 
 def getPitchForIntervals(data, tgFN, tierName):
@@ -63,11 +74,14 @@ def f0Morph(fromWavFN, pitchPath, stepList,
 
     # 1. Prepare the data for morphing - acquire the segments to merge
     # (Done elsewhere, with the input fed into this function)
-
+    
     # 2. Morph the fromData to the toData
-    finalOutputList = morph_sequence.morphChunkedDataLists(fromPitchData,
-                                                           toPitchData,
-                                                           stepList)
+    try:
+        finalOutputList = morph_sequence.morphChunkedDataLists(fromPitchData,
+                                                               toPitchData,
+                                                               stepList)
+    except IndexError:
+        raise MissingPitchDataException()
 
     fromPitchData = [row for subList in fromPitchData for row in subList]
     toPitchData = [row for subList in toPitchData for row in subList]
@@ -80,13 +94,12 @@ def f0Morph(fromWavFN, pitchPath, stepList,
         
         if keepPitchRange is True:
             outputDataList = morph_sequence.morphRange(outputDataList,
-                                                        fromPitchData)
+                                                       fromPitchData)
             
         if keepAveragePitch is True:
             outputDataList = morph_sequence.morphAveragePitch(outputDataList,
-                                                               fromPitchData)
+                                                              fromPitchData)
         
-
         stepOutputName = "%s_%0.3g" % (outputName, stepList[i])
         pitchFNFullPath = join(pitchTierPath, "%s.PitchTier" % stepOutputName)
         outputFN = join(resynthesizedPath, "%s.wav" % stepOutputName)
