@@ -1,4 +1,8 @@
+'''
 
+
+An example of morphing the pitch in one file to that in another
+'''
 import os
 from os.path import join
 
@@ -76,9 +80,11 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  outputMaxPitch=maxPitch,
                  praatEXE=praatEXE)
 
-# And we can reset the speaker's pitch range and mean pitch back to their own
+# And, as shown in the next four examples,
+# we can reset the speaker's pitch range and mean pitch back to their own
 stepList = [1.0, ]
 
+# Source's mean pitch, target's pitch range
 f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  pitchPath=path,
                  stepList=stepList,
@@ -92,6 +98,7 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  keepPitchRange=False,
                  keepAveragePitch=True)
 
+# Target's mean pitch, source's pitch range
 f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  pitchPath=path,
                  stepList=stepList,
@@ -105,6 +112,7 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  keepPitchRange=True,
                  keepAveragePitch=False)
 
+# Source's mean pitch, source's pitch range
 f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  pitchPath=path,
                  stepList=stepList,
@@ -118,6 +126,7 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  keepPitchRange=True,
                  keepAveragePitch=True)
 
+# Target's mean pitch, target's pitch range (default behavior)
 f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  pitchPath=path,
                  stepList=stepList,
