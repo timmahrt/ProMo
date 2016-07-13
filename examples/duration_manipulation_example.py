@@ -40,6 +40,8 @@ outputPath = join(path, "duration_morph")
 outputName = "%s_%s_dur_morph" % (fromName, toName)
 outputTG = join(outputPath, "%s.TextGrid" % outputName)
 outputImageFN = join(outputPath, "%s.png" % outputName)
+filterFunc = None
+includeUnlabeledRegions = False
 
 # Morph the duration from one file to another
 durationParams = duration_morph.getMorphParameters(join(path, fromTGFN),
@@ -47,7 +49,9 @@ durationParams = duration_morph.getMorphParameters(join(path, fromTGFN),
                                                    tierName,
                                                    outputTG,
                                                    outputImageFN,
-                                                   stepListForImage=stepList)
+                                                   stepList,
+                                                   filterFunc,
+                                                   includeUnlabeledRegions)
 duration_morph.changeDuration(join(path, fromWavFN),
                               durationParams,
                               stepList,
@@ -57,13 +61,25 @@ duration_morph.changeDuration(join(path, fromWavFN),
                               praatEXE=praatEXE)
 
 # Increase duration of all segments by 20 percent
-twentyPercentMore = lambda x, y: (x * 1.20, y * 1.20)
+twentyPercentMore = lambda x: (x * 1.20)
 outputName = "%s_20_percent_more" % fromName
 outputTG = join(outputPath, "%s.TextGrid" % outputName)
 outputImageFN = join(outputPath, "%s.png" % outputName)
+filterFunc = None
+includeUnlabeledRegions = True
 durationParams = duration_morph.getManipulatedParamaters(join(path, fromTGFN),
                                                          tierName,
                                                          twentyPercentMore,
                                                          outputTG,
                                                          outputImageFN,
-                                                         stepList)
+                                                         stepList,
+                                                         filterFunc,
+                                                         includeUnlabeledRegions)
+
+duration_morph.changeDuration(join(path, fromWavFN),
+                              durationParams,
+                              stepList,
+                              outputName,
+                              outputMinPitch=minPitch,
+                              outputMaxPitch=maxPitch,
+                              praatEXE=praatEXE)

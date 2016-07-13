@@ -93,7 +93,8 @@ def getBareParameters(wavFN):
 
 
 def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
-                       outputImageFN=None, stepListForImage=None):
+                       outputImageFN=None, stepListForImage=None,
+                       filterFunc=None, includeUnlabeledRegions=False):
     '''
     Get intervals for source and target audio files
     
@@ -108,8 +109,10 @@ def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
     if outputImageFN is not None:
         utils.makeDir(os.path.split(outputImageFN)[0])
             
-    fromExtractInfo = utils.getIntervals(fromTGFN, tierName)
-    toExtractInfo = utils.getIntervals(toTGFN, tierName)
+    fromExtractInfo = utils.getIntervals(fromTGFN, tierName, filterFunc,
+                                         includeUnlabeledRegions)
+    toExtractInfo = utils.getIntervals(toTGFN, tierName, filterFunc,
+                                       includeUnlabeledRegions)
 
     durationParameters = []
     for fromInfoTuple, toInfoTuple in zip(fromExtractInfo, toExtractInfo):
@@ -136,15 +139,16 @@ def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
     # Create the plot of the morph
     if outputImageFN is not None:
         _plotResults(durationParameters, fromTGFN, toTGFN,
-                     tierName, stepListForImage,
-                     outputImageFN)
+                     tierName, stepListForImage, outputImageFN,
+                     filterFunc, includeUnlabeledRegions)
     
     return durationParameters
 
 
 def getManipulatedParamaters(tgFN, tierName, modFunc,
                              outputTGFN=None, outputImageFN=None,
-                             stepListForImage=None):
+                             stepListForImage=None, filterFunc=None,
+                             includeUnlabeledRegions=False):
     '''
     Get intervals for source and target audio files
     
@@ -160,12 +164,13 @@ def getManipulatedParamaters(tgFN, tierName, modFunc,
     if outputImageFN is not None:
         utils.makeDir(os.path.split(outputTGFN)[0])
     
-    fromExtractInfo = utils.getIntervals(tgFN, tierName)
+    fromExtractInfo = utils.getIntervals(tgFN, tierName, None,
+                                         includeUnlabeledRegions)
     
     durationParameters = []
     for fromInfoTuple in fromExtractInfo:
         fromStart, fromEnd = fromInfoTuple[:2]
-        toStart, toEnd = modFunc(fromStart, fromEnd)
+        toStart, toEnd = modFunc(fromStart), modFunc(fromEnd)
 
         # Praat will ignore a second value appearing at the same time as
         # another so we give each start a tiny offset to distinguish intervals
@@ -180,20 +185,24 @@ def getManipulatedParamaters(tgFN, tierName, modFunc,
     
     # Create the adjusted textgrids
     if outputTGFN is not None:
-        adjustedTG = textgridManipulateDuration(tgFN, modFunc)
+        adjustedTG = textgridManipulateDuration(tgFN,
+                                                modFunc,
+                                                filterFunc,
+                                                includeUnlabeledRegions)
         adjustedTG.save(outputTGFN)
     
     # Create the plot of the manipulation
     if outputTGFN is not None and outputImageFN is not None:
         _plotResults(durationParameters, tgFN, outputTGFN,
-                     tierName, stepListForImage,
-                     outputImageFN)
+                     tierName, stepListForImage, outputImageFN,
+                     filterFunc, includeUnlabeledRegions)
 
     return durationParameters
 
 
 def _plotResults(durationParameters, fromTGFN, toTGFN, tierName,
-                 stepList, outputPNGFN):
+                 stepList, outputPNGFN, filterFunc,
+                 includeUnlabeledRegions):
 
     # Containers
     fromDurList = []
@@ -201,8 +210,10 @@ def _plotResults(durationParameters, fromTGFN, toTGFN, tierName,
     actDurList = []
     labelList = []
 
-    fromExtractInfo = utils.getIntervals(fromTGFN, tierName)
-    toExtractInfo = utils.getIntervals(toTGFN, tierName)
+    fromExtractInfo = utils.getIntervals(fromTGFN, tierName, filterFunc,
+                                         includeUnlabeledRegions)
+    toExtractInfo = utils.getIntervals(toTGFN, tierName, filterFunc,
+                                       includeUnlabeledRegions)
 
     # Get durations
     for fromInfoTuple, toInfoTuple in zip(fromExtractInfo, toExtractInfo):
@@ -243,7 +254,8 @@ def textgridMorphDuration(fromTGFN, toTGFN):
     return adjustedTG
 
 
-def textgridManipulateDuration(tgFN, modFunc, filterFunc=None):
+def textgridManipulateDuration(tgFN, modFunc, filterFunc=None,
+                               includeUnlabeledRegions=False):
 
     tg = tgio.openTextGrid(tgFN)
 
@@ -255,6 +267,10 @@ def textgridManipulateDuration(tgFN, modFunc, filterFunc=None):
 
     for tierName in tg.tierNameList:
         fromTier = tg.tierDict[tierName]
+        
+        if includeUnlabeledRegions is True:
+            fromTier = fromTier.fillInBlanks()
+        
         adjustedTier = fromTier.manipulate(modFunc, filterFunc)
         adjustedTG.addTier(adjustedTier)
 

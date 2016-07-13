@@ -9,16 +9,17 @@ import os
 from praatio import tgio
 
 
-def getIntervals(fn, tierName, filterFunc=None):
+def getIntervals(fn, tierName, filterFunc=None,
+                 includeUnlabeledRegions=False):
     '''
     Get information about the 'extract' tier, used by several merge scripts
     '''
 
-    if filterFunc is None:
-        filterFunc = lambda x: True
-
     tg = tgio.openTextGrid(fn)
+    
     tier = tg.tierDict[tierName]
+    if includeUnlabeledRegions is True:
+        tier = tier.fillInBlanks()
 
     entryList = tier.entryList
     if filterFunc is not None:
