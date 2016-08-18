@@ -254,24 +254,114 @@ def textgridMorphDuration(fromTGFN, toTGFN):
     return adjustedTG
 
 
-def textgridManipulateDuration(tgFN, modFunc, filterFunc=None,
-                               includeUnlabeledRegions=False):
+def textgridManipulateDuration(tgFN, ratioList):
 
     tg = tgio.openTextGrid(tgFN)
-
-    # By default, all regions are manipulated (except silence)
-    if filterFunc is None:
-        filterFunc = lambda x: True
 
     adjustedTG = tgio.Textgrid()
 
     for tierName in tg.tierNameList:
         fromTier = tg.tierDict[tierName]
         
-        if includeUnlabeledRegions is True:
-            fromTier = fromTier.fillInBlanks()
+        adjustedTier = None
+        if isinstance(fromTier, tgio.IntervalTier):
+            adjustedTier = _morphIntervalTier(fromTier, ratioList)
+        elif isinstance(fromTier, tgio.PointTier):
+            adjustedTier = _morphPointTier(fromTier, ratioList)
         
-        adjustedTier = fromTier.manipulate(modFunc, filterFunc)
+        assert(adjustedTier is not None)
         adjustedTG.addTier(adjustedTier)
 
     return adjustedTG
+
+
+def _getTimeDiff(start, stop, ratio):
+    '''Returns the time difference between interval and interval*ratio'''
+    return (ratio - 1) * (stop - start)
+
+
+def _morphPointTier(tier, ratioList):
+    
+    cumulativeAdjustAmount = 0
+    i = 0
+    newEntryList = []
+    for timestamp, label in tier.entryList:
+        
+        # Advance to the manipulation interval that coincides with the
+        # current point or appears after it
+        while i < len(ratioList) and timestamp > ratioList[i][1]:
+            rStart, rStop, ratio = ratioList[i]
+            cumulativeAdjustAmount += _getTimeDiff(rStart, rStop, ratio)
+            i += 1
+        
+        newTime = timestamp + cumulativeAdjustAmount
+        
+        # Alter the time if the point is within a manipulation interval
+        if i < len(ratioList):
+            rStart, rStop, ratio = ratioList[i]
+            if timestamp > rStart and timestamp <= rStop:
+                newTime += _getTimeDiff(rStart, timestamp, ratio)
+        
+        newEntryList.append((newTime, label))
+    
+    maxT = tier.maxTimestamp + cumulativeAdjustAmount
+    return tier.newTier(entryList=newEntryList, maxTimestamp=maxT)
+
+
+def _morphIntervalTier(tier, ratioList):
+    
+    cumulativeAdjustAmount = 0
+    i = 0
+    newEntryList = []
+    for start, stop, label in tier.entryList:
+        
+        # Syncronize the manipulation and data intervals so that they
+        # are either overlapping or the manipulation interval is farther
+        # in the future.  This accumulates the effect of past
+        # manipulations so we know how much to offset timestamps
+        # for the current interval.
+        while (i < len(ratioList) and start > ratioList[i][0] and
+               start >= ratioList[i][1]):
+            rStart, rStop, ratio = ratioList[i]
+            cumulativeAdjustAmount = _getTimeDiff(rStart, rStop, ratio)
+            i += 1
+        
+        newStart = start + cumulativeAdjustAmount
+        newStop = stop + cumulativeAdjustAmount
+        
+        # Manipulate the interval further if there is overlap with a
+        # manipulation interval
+        while i < len(ratioList):
+            rStart, rStop, ratio = ratioList[i]
+            
+            # currAdjustAmount is the ratio modified by percent change
+            # e.g. if the ratio is a boost of 1.2 but percent change is
+            # 0.5, ratio = 1.1 (it loses half of its effect)
+            
+            # Adjusting the start position based on overlap with the
+            # current adjust interval
+            if start <= rStart:
+                pass
+            elif start > rStart and start <= rStop:
+                newStart += _getTimeDiff(start, rStart, ratio)
+                
+            # Adjusting the stop position based on overlap with the
+            # current adjust interval
+            if stop >= ratioList[i][1]:
+                newStop += _getTimeDiff(rStart, rStop, ratio)
+            elif stop < rStop and stop >= rStart:
+                newStop += _getTimeDiff(rStart, stop, ratio)
+            
+            # If we are beyond the current manipulation interval,
+            # then we need to move to the next one
+            if stop >= rStop:
+                cumulativeAdjustAmount += _getTimeDiff(rStart, rStop, ratio)
+                i += 1
+            # Otherwise, we are done manipulating the current interval
+            elif stop < rStop:
+                break
+        
+        newEntryList.append((newStart, newStop, label))
+    
+    newMax = tier.maxTimestamp + cumulativeAdjustAmount
+    return tier.newTier(entryList=newEntryList, maxTimestamp=newMax)
