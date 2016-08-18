@@ -92,9 +92,10 @@ def getBareParameters(wavFN):
     return [(0, wavDuration, ''), ]
 
 
-def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
-                       outputImageFN=None, stepListForImage=None,
-                       filterFunc=None, includeUnlabeledRegions=False):
+def getMorphParameters(fromTGFN, toTGFN, tierName, stepList=None,
+                       outputTGName=None,
+                       outputImageFN=None,
+                       filterFunc=None, useBlanks=False):
     '''
     Get intervals for source and target audio files
     
@@ -102,45 +103,60 @@ def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
     interval
     '''
     
-    if stepListForImage is None:
-        stepListForImage = [1, ]
-    if outputTGFN is not None:
-        utils.makeDir(os.path.split(outputTGFN)[0])
+    if stepList is None:
+        stepList = [1, ]  # Complete morph
+    if filterFunc is None:
+        filterFunc = lambda entry: True  # Everything is accepted
+    if outputTGName is not None:
+        utils.makeDir(os.path.split(outputTGName)[0])
     if outputImageFN is not None:
         utils.makeDir(os.path.split(outputImageFN)[0])
-            
-    fromExtractInfo = utils.getIntervals(fromTGFN, tierName, filterFunc,
-                                         includeUnlabeledRegions)
-    toExtractInfo = utils.getIntervals(toTGFN, tierName, filterFunc,
-                                       includeUnlabeledRegions)
+    
+    fromEntryList = utils.getIntervals(fromTGFN, tierName,
+                                       includeUnlabeledRegions=useBlanks)
+    toEntryList = utils.getIntervals(toTGFN, tierName,
+                                     includeUnlabeledRegions=useBlanks)
+
+    fromEntryList = [entry for entry in fromEntryList if filterFunc(entry)]
+    toEntryList = [entry for entry in toEntryList if filterFunc(entry)]
+
+    assert(len(fromEntryList) == len(toEntryList))
 
     durationParameters = []
-    for fromInfoTuple, toInfoTuple in zip(fromExtractInfo, toExtractInfo):
-        fromStart, fromEnd = fromInfoTuple[:2]
-        toStart, toEnd = toInfoTuple[:2]
+    for fromEntry, toEntry in zip(fromEntryList, toEntryList):
+        fromStart, fromEnd = fromEntry[:2]
+        toStart, toEnd = toEntry[:2]
 
         # Praat will ignore a second value appearing at the same time as
         # another so we give each start a tiny offset to distinguish intervals
         # that start and end at the same point
         toStart += PRAAT_TIME_DIFF
         fromStart += PRAAT_TIME_DIFF
-
+        
         ratio = (toEnd - toStart) / float((fromEnd - fromStart))
-
-        ratioTuple = (fromStart, fromEnd, ratio)
-        durationParameters.append(ratioTuple)
+        durationParameters.append((fromStart, fromEnd, ratio))
     
     # Create the adjusted textgrids
-    if outputTGFN is not None:
-        adjustedTG = textgridMorphDuration(fromTGFN,
-                                           toTGFN)
-        adjustedTG.save(outputTGFN)
+    if outputTGName is not None:
+        
+        for stepFactor in stepList:
+            
+            stepDurationParameters = [(start,
+                                       end,
+                                       1 + (ratio - 1) * stepFactor)
+                                      for start, end, ratio
+                                      in durationParameters]
+            adjustedTG = textgridManipulateDuration(fromTGFN,
+                                                    stepDurationParameters)
+            
+            outputTGFN = "%s_%0.3g.TextGrid" % (outputTGName, stepFactor)
+            adjustedTG.save(outputTGFN)
     
     # Create the plot of the morph
     if outputImageFN is not None:
         _plotResults(durationParameters, fromTGFN, toTGFN,
-                     tierName, stepListForImage, outputImageFN,
-                     filterFunc, includeUnlabeledRegions)
+                     tierName, stepList, outputImageFN,
+                     filterFunc, False)
     
     return durationParameters
 
