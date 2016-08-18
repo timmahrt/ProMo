@@ -34,11 +34,14 @@ def makeDir(path):
         os.mkdir(path)
         
 
-def generateStepList(numSteps):
+def generateStepList(numSteps, includeZero=False):
     
     assert(numSteps > 0)
     
     stepList = []
+    if includeZero:
+        stepList.append(0)
+        
     for i in range(numSteps):
         stepList.append((i + 1) / float((numSteps)))
         
