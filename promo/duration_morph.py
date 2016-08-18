@@ -146,8 +146,6 @@ def getMorphParameters(fromTGFN, toTGFN, tierName, outputTGFN=None,
 
 
 def getManipulatedParamaters(tgFN, tierName, modFunc,
-                             outputTGFN=None, outputImageFN=None,
-                             stepListForImage=None, filterFunc=None,
                              includeUnlabeledRegions=False):
     '''
     Get intervals for source and target audio files
@@ -155,14 +153,6 @@ def getManipulatedParamaters(tgFN, tierName, modFunc,
     Use this information to find out how much to stretch/shrink each source
     interval.
     '''
-    
-    if stepListForImage is None:
-        stepListForImage = [1, ]
-    if outputTGFN is not None:
-        utils.makeDir(os.path.split(outputTGFN)[0])
-    
-    if outputImageFN is not None:
-        utils.makeDir(os.path.split(outputTGFN)[0])
     
     fromExtractInfo = utils.getIntervals(tgFN, tierName, None,
                                          includeUnlabeledRegions)
@@ -182,20 +172,6 @@ def getManipulatedParamaters(tgFN, tierName, modFunc,
 
         ratioTuple = (fromStart, fromEnd, ratio)
         durationParameters.append(ratioTuple)
-    
-    # Create the adjusted textgrids
-    if outputTGFN is not None:
-        adjustedTG = textgridManipulateDuration(tgFN,
-                                                modFunc,
-                                                filterFunc,
-                                                includeUnlabeledRegions)
-        adjustedTG.save(outputTGFN)
-    
-    # Create the plot of the manipulation
-    if outputTGFN is not None and outputImageFN is not None:
-        _plotResults(durationParameters, tgFN, outputTGFN,
-                     tierName, stepListForImage, outputImageFN,
-                     filterFunc, includeUnlabeledRegions)
 
     return durationParameters
 
