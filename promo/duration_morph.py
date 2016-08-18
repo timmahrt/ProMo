@@ -93,24 +93,20 @@ def getBareParameters(wavFN):
 
 
 def getMorphParameters(fromTGFN, toTGFN, tierName, stepList=None,
-                       outputTGName=None,
-                       outputImageFN=None,
                        filterFunc=None, useBlanks=False):
     '''
     Get intervals for source and target audio files
     
     Use this information to find out how much to stretch/shrink each source
-    interval
+    interval.
+    
+    The target values are based on the contents of toTGFN.
     '''
     
     if stepList is None:
         stepList = [1, ]  # Complete morph
     if filterFunc is None:
         filterFunc = lambda entry: True  # Everything is accepted
-    if outputTGName is not None:
-        utils.makeDir(os.path.split(outputTGName)[0])
-    if outputImageFN is not None:
-        utils.makeDir(os.path.split(outputImageFN)[0])
     
     fromEntryList = utils.getIntervals(fromTGFN, tierName,
                                        includeUnlabeledRegions=useBlanks)
@@ -136,42 +132,22 @@ def getMorphParameters(fromTGFN, toTGFN, tierName, stepList=None,
         ratio = (toEnd - toStart) / float((fromEnd - fromStart))
         durationParameters.append((fromStart, fromEnd, ratio))
     
-    # Create the adjusted textgrids
-    if outputTGName is not None:
-        
-        for stepFactor in stepList:
-            
-            stepDurationParameters = [(start,
-                                       end,
-                                       1 + (ratio - 1) * stepFactor)
-                                      for start, end, ratio
-                                      in durationParameters]
-            adjustedTG = textgridManipulateDuration(fromTGFN,
-                                                    stepDurationParameters)
-            
-            outputTGFN = "%s_%0.3g.TextGrid" % (outputTGName, stepFactor)
-            adjustedTG.save(outputTGFN)
-    
-    # Create the plot of the morph
-    if outputImageFN is not None:
-        _plotResults(durationParameters, fromTGFN, toTGFN,
-                     tierName, stepList, outputImageFN,
-                     filterFunc, False)
-    
     return durationParameters
 
 
 def getManipulatedParamaters(tgFN, tierName, modFunc,
-                             includeUnlabeledRegions=False):
+                             filterFunc=None, useBlanks=False):
     '''
     Get intervals for source and target audio files
     
     Use this information to find out how much to stretch/shrink each source
     interval.
+    
+    The target values are based on modfunc.
     '''
     
-    fromExtractInfo = utils.getIntervals(tgFN, tierName, None,
-                                         includeUnlabeledRegions)
+    fromExtractInfo = utils.getIntervals(tgFN, tierName, filterFunc,
+                                         useBlanks)
     
     durationParameters = []
     for fromInfoTuple in fromExtractInfo:
@@ -190,6 +166,42 @@ def getManipulatedParamaters(tgFN, tierName, modFunc,
         durationParameters.append(ratioTuple)
 
     return durationParameters
+
+
+def outputMorphTextgrids(fromTGFN, durationParameters, stepList,
+                         outputTGName):
+
+    if outputTGName is not None:
+        utils.makeDir(os.path.split(outputTGName)[0])
+
+    # Create the adjusted textgrids
+    if outputTGName is not None:
+        
+        for stepFactor in stepList:
+            
+            stepDurationParameters = [(start,
+                                       end,
+                                       1 + (ratio - 1) * stepFactor)
+                                      for start, end, ratio
+                                      in durationParameters]
+            adjustedTG = textgridManipulateDuration(fromTGFN,
+                                                    stepDurationParameters)
+            
+            outputTGFN = "%s_%0.3g.TextGrid" % (outputTGName, stepFactor)
+            adjustedTG.save(outputTGFN)
+
+
+def outputMorphPlot(fromTGFN, toTGFN, tierName, durationParameters, stepList,
+                    outputImageFN):
+    
+    if outputImageFN is not None:
+        utils.makeDir(os.path.split(outputImageFN)[0])
+        
+    # Create the plot of the morph
+    if outputImageFN is not None:
+        _plotResults(durationParameters, fromTGFN, toTGFN,
+                     tierName, stepList, outputImageFN,
+                     None, False)
 
 
 def _plotResults(durationParameters, fromTGFN, toTGFN, tierName,
@@ -232,7 +244,11 @@ def _plotResults(durationParameters, fromTGFN, toTGFN, tierName,
 
 
 def textgridMorphDuration(fromTGFN, toTGFN):
-
+    '''
+    A convenience function.  Morphs interval durations of one tg to another.
+    
+    This assumes the two textgrids have the same number of segments.
+    '''
     fromTG = tgio.openTextGrid(fromTGFN)
     toTG = tgio.openTextGrid(toTGFN)
     adjustedTG = tgio.Textgrid()
