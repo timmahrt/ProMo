@@ -47,9 +47,6 @@ includeUnlabeledRegions = False
 durationParams = duration_morph.getMorphParameters(join(path, fromTGFN),
                                                    join(path, toTGFN),
                                                    tierName,
-                                                   outputTG,
-                                                   outputImageFN,
-                                                   stepList,
                                                    filterFunc,
                                                    includeUnlabeledRegions)
 duration_morph.changeDuration(join(path, fromWavFN),
@@ -70,9 +67,6 @@ includeUnlabeledRegions = True
 durationParams = duration_morph.getManipulatedParamaters(join(path, fromTGFN),
                                                          tierName,
                                                          twentyPercentMore,
-                                                         outputTG,
-                                                         outputImageFN,
-                                                         stepList,
                                                          filterFunc,
                                                          includeUnlabeledRegions)
 

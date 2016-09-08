@@ -92,7 +92,7 @@ def getBareParameters(wavFN):
     return [(0, wavDuration, ''), ]
 
 
-def getMorphParameters(fromTGFN, toTGFN, tierName, stepList=None,
+def getMorphParameters(fromTGFN, toTGFN, tierName,
                        filterFunc=None, useBlanks=False):
     '''
     Get intervals for source and target audio files
@@ -103,8 +103,6 @@ def getMorphParameters(fromTGFN, toTGFN, tierName, stepList=None,
     The target values are based on the contents of toTGFN.
     '''
     
-    if stepList is None:
-        stepList = [1, ]  # Complete morph
     if filterFunc is None:
         filterFunc = lambda entry: True  # Everything is accepted
     
