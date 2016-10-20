@@ -102,6 +102,24 @@ class IntegrationTests(unittest.TestCase):
                                           praatEXE=praatEXE)
         except utils.FileNotFound:
             pass
+        
+    def test_textgridMorphDuration(self):
+        duration_morph.textgridMorphDuration(self.fromTGFN, self.toTGFN)
+
+    def test_textgridManipulateDuration(self):
+        filterFunc = None
+        includeUnlabeledRegions = False
+        durationParams = duration_morph.getMorphParameters(self.fromTGFN,
+                                                           self.toTGFN,
+                                                           self.tierName,
+                                                           filterFunc,
+                                                           includeUnlabeledRegions)
+        
+        duration_morph.outputMorphTextgrids(self.fromTGFN,
+                                            durationParams,
+                                            [1, ],
+                                            join(self.root,
+                                                 "outputName.TextGrid"))
 
     def setUp(self):
         unittest.TestCase.setUp(self)
