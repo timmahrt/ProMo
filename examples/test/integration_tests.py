@@ -20,9 +20,12 @@ will be skipped (and unverified) however the test will still pass.
 
 import unittest
 import os
+from os.path import join
 import sys
 
 from praatio.utilities import utils
+from promo import duration_morph
+from promo.morph_utils import utils as morph_utils
 
 cwd = os.path.dirname(os.path.realpath(__file__))
 _root = os.path.split(cwd)[0]
@@ -31,6 +34,7 @@ sys.path.append(_root)
 
 class IntegrationTests(unittest.TestCase):
     """Integration tests"""
+
 
     def test_add_tiers(self):
         """Running 'duration_manipulation_example.py'"""
@@ -47,7 +51,7 @@ class IntegrationTests(unittest.TestCase):
             import pitch_morph_example
         except utils.FileNotFound:
             pass
-    
+
     def test_delete_vowels(self):
         """Running 'pitch_morph_to_pitch_contour.py'"""
         print("\npitch_morph_to_pitch_contour.py" + "\n" + "-" * 10)
@@ -55,16 +59,68 @@ class IntegrationTests(unittest.TestCase):
             import pitch_morph_to_pitch_contour
         except utils.FileNotFound:
             pass
-    
+
+    def test_getMorphParameters(self):
+        filterFunc = None
+        includeUnlabeledRegions = False
+        duration_morph.getMorphParameters(self.fromTGFN,
+                                          self.toTGFN,
+                                          self.tierName,
+                                          filterFunc,
+                                          includeUnlabeledRegions)
+
+    def test_getManipulatedParameters(self):
+        twentyPercentMore = lambda x: (x * 1.20)
+        filterFunc = None
+        includeUnlabeledRegions = True
+        duration_morph.getManipulatedParamaters(self.fromTGFN,
+                                                self.tierName,
+                                                twentyPercentMore,
+                                                filterFunc,
+                                                includeUnlabeledRegions)
+
+    def test_changeDuration(self):
+        filterFunc = None
+        includeUnlabeledRegions = False
+        durationParams = duration_morph.getMorphParameters(self.fromTGFN,
+                                                           self.toTGFN,
+                                                           self.tierName,
+                                                           filterFunc,
+                                                           includeUnlabeledRegions)
+
+        stepList = morph_utils.generateStepList(3)
+        outputName = "mary1_dur_morph"
+        # praatEXE = r"C:\Praat.exe"  # Windows
+        praatEXE = "/Applications/Praat.app/Contents/MacOS/Praat"  # Mac
+        try:
+            duration_morph.changeDuration(self.fromWavFN,
+                                          durationParams,
+                                          stepList,
+                                          outputName,
+                                          outputMinPitch=self.minPitch,
+                                          outputMaxPitch=self.maxPitch,
+                                          praatEXE=praatEXE)
+        except utils.FileNotFound:
+            pass
+
     def setUp(self):
         unittest.TestCase.setUp(self)
 
+        self.root = join(".", "files")
+        
+        self.fromWavFN = join(self.root, "mary1.wav")
+        self.fromTGFN = join(self.root, "mary1.TextGrid")
+        self.toTGFN = join(self.root, "mary2.TextGrid")
+        self.tierName = "PhonAlign"
+        self.minPitch = 50
+        self.maxPitch = 350
+        
         root = os.path.join(_root, "files")
         self.oldRoot = os.getcwd()
         os.chdir(_root)
         self.startingList = os.listdir(root)
         self.startingDir = os.getcwd()
-    
+
     def tearDown(self):
         '''Remove any files generated during the test'''
         #unittest.TestCase.tearDown(self)
@@ -83,7 +139,7 @@ class IntegrationTests(unittest.TestCase):
                     os.remove(fnFullPath)
         
         os.chdir(self.oldRoot)
-        
+
 
 if __name__ == '__main__':
     unittest.main()
