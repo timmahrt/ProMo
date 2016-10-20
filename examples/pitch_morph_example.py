@@ -12,13 +12,9 @@ from promo import f0_morph
 from promo.morph_utils import utils
 
 # Define the arguments for the code
-# Windows paths
-path = r"C:\Users\Tim\Dropbox\workspace\prosodyMorph\examples\files"
-praatEXE = r"C:\Praat.exe"
-
-# Mac paths
-path = "/Users/tmahrt/Dropbox/workspace/prosodyMorph/examples/files"
-praatEXE = "/Applications/Praat.app/Contents/MacOS/Praat"
+root = join('.', 'files')
+praatEXE = r"C:\Praat.exe"  # Windows path
+#praatEXE = "/Applications/Praat.app/Contents/MacOS/Praat"  # Mac path
 
 minPitch = 50
 maxPitch = 350
@@ -32,31 +28,31 @@ toWavFN = toName + ".wav"
 fromPitchFN = fromName + ".txt"
 toPitchFN = toName + ".txt"
 
-fromTGFN = join(path, os.path.splitext(fromWavFN)[0] + ".TextGrid")
-toTGFN = join(path, os.path.splitext(toWavFN)[0] + ".TextGrid")
+fromTGFN = join(root, os.path.splitext(fromWavFN)[0] + ".TextGrid")
+toTGFN = join(root, os.path.splitext(toWavFN)[0] + ".TextGrid")
 
 # Prepare the data for morphing
-# 1st load it into memory
-fromPitch = pitch_and_intensity.audioToPI(path, fromWavFN, path,
+# 1ST load it into memory
+fromPitch = pitch_and_intensity.audioToPI(root, fromWavFN, root,
                                           fromPitchFN, praatEXE, minPitch,
                                           maxPitch, forceRegenerate=False)
-toPitch = pitch_and_intensity.audioToPI(path, toWavFN, path,
+toPitch = pitch_and_intensity.audioToPI(root, toWavFN, root,
                                         toPitchFN, praatEXE, minPitch,
                                         maxPitch, forceRegenerate=False)
 
-# 2nd remove intensity values
+# 2ND remove intensity values
 fromPitch = [(time, pitch) for time, pitch, _ in fromPitch]
 toPitch = [(time, pitch) for time, pitch, _ in toPitch]
 
-# 3rd select which sections to align.
+# 3RD select which sections to align.
 # We'll use textgrids for this purpose.
 tierName = "PhonAlign"
 fromPitch = f0_morph.getPitchForIntervals(fromPitch, fromTGFN, tierName)
 toPitch = f0_morph.getPitchForIntervals(toPitch, toTGFN, tierName)
 
-# Run the morph process
-f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
-                 pitchPath=path,
+# FINALLY: Run the morph process
+f0_morph.f0Morph(fromWavFN=join(root, fromWavFN),
+                 pitchPath=root,
                  stepList=stepList,
                  outputName="%s_%s_f0_morph" % (fromName, toName),
                  doPlotPitchSteps=True,
@@ -66,11 +62,20 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  outputMaxPitch=maxPitch,
                  praatEXE=praatEXE)
 
+
+####################
+# The remaining examples below demonstrate the use of
+# f0_morph.f0Morph() with different arguments.  It may
+# be helpful for your work.  However, you can safely comment
+# out or delete the code below to keep things simple.
+####################
+
+
 # Or for more control over the steps:
 stepList = [0.10, ]  # 10% morph
 # Run the morph process
-f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
-                 pitchPath=path,
+f0_morph.f0Morph(fromWavFN=join(root, fromWavFN),
+                 pitchPath=root,
                  stepList=stepList,
                  outputName="%s_%s_f0_morph" % (fromName, toName),
                  doPlotPitchSteps=True,
@@ -85,8 +90,8 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
 stepList = [1.0, ]
 
 # Source's mean pitch, target's pitch range
-f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
-                 pitchPath=path,
+f0_morph.f0Morph(fromWavFN=join(root, fromWavFN),
+                 pitchPath=root,
                  stepList=stepList,
                  outputName="%s_%s_f0_morph_w_average" % (fromName, toName),
                  doPlotPitchSteps=True,
@@ -99,8 +104,8 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  keepAveragePitch=True)
 
 # Target's mean pitch, source's pitch range
-f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
-                 pitchPath=path,
+f0_morph.f0Morph(fromWavFN=join(root, fromWavFN),
+                 pitchPath=root,
                  stepList=stepList,
                  outputName="%s_%s_f0_morph_w_range" % (fromName, toName),
                  doPlotPitchSteps=True,
@@ -113,10 +118,11 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  keepAveragePitch=False)
 
 # Source's mean pitch, source's pitch range
-f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
-                 pitchPath=path,
+outputName = "%s_%s_f0_morph_w_range_and_average" % (fromName, toName)
+f0_morph.f0Morph(fromWavFN=join(root, fromWavFN),
+                 pitchPath=root,
                  stepList=stepList,
-                 outputName="%s_%s_f0_morph_w_range_and_average" % (fromName, toName),
+                 outputName=outputName,
                  doPlotPitchSteps=True,
                  fromPitchData=fromPitch,
                  toPitchData=toPitch,
@@ -127,8 +133,8 @@ f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
                  keepAveragePitch=True)
 
 # Target's mean pitch, target's pitch range (default behavior)
-f0_morph.f0Morph(fromWavFN=join(path, fromWavFN),
-                 pitchPath=path,
+f0_morph.f0Morph(fromWavFN=join(root, fromWavFN),
+                 pitchPath=root,
                  stepList=stepList,
                  outputName="%s_%s_f0_morph_w_regular" % (fromName, toName),
                  doPlotPitchSteps=True,

@@ -11,13 +11,9 @@ from promo import duration_morph
 from promo.morph_utils import utils
 
 # Define the arguments for the code
-# Windows paths
-path = r"C:\Users\Tim\Dropbox\workspace\prosodyMorph\examples\files"
-praatEXE = r"C:\Praat.exe"
-
-# Mac paths
-path = "/Users/tmahrt/Dropbox/workspace/prosodyMorph/examples/files"
-praatEXE = "/Applications/Praat.app/Contents/MacOS/Praat"
+root = join('.', "files")
+# praatEXE = r"C:\Praat.exe"  # Windows
+praatEXE = "/Applications/Praat.app/Contents/MacOS/Praat"  # Mac
 
 minPitch = 50
 maxPitch = 350
@@ -25,18 +21,18 @@ stepList = utils.generateStepList(3)
 
 fromName = "mary1"
 toName = "mary2"
-fromWavFN = fromName + ".wav"
-toWavFN = toName + ".wav"
+fromWavFN = join(root, fromName + ".wav")
+toWavFN = join(root, toName + ".wav")
 
 fromPitchFN = fromName + ".txt"
 toPitchFN = toName + ".txt"
 
-tierName = "TokensAlign"
+tierName = "PhonAlign"
 
-fromTGFN = join(path, os.path.splitext(fromWavFN)[0] + ".TextGrid")
-toTGFN = join(path, os.path.splitext(toWavFN)[0] + ".TextGrid")
+fromTGFN = join(root, fromName + ".TextGrid")
+toTGFN = join(root, toName + ".TextGrid")
 
-outputPath = join(path, "duration_morph")
+outputPath = join(root, "duration_morph")
 outputName = "%s_%s_dur_morph" % (fromName, toName)
 outputTG = join(outputPath, "%s.TextGrid" % outputName)
 outputImageFN = join(outputPath, "%s.png" % outputName)
@@ -44,12 +40,12 @@ filterFunc = None
 includeUnlabeledRegions = False
 
 # Morph the duration from one file to another
-durationParams = duration_morph.getMorphParameters(join(path, fromTGFN),
-                                                   join(path, toTGFN),
+durationParams = duration_morph.getMorphParameters(fromTGFN,
+                                                   toTGFN,
                                                    tierName,
                                                    filterFunc,
                                                    includeUnlabeledRegions)
-duration_morph.changeDuration(join(path, fromWavFN),
+duration_morph.changeDuration(fromWavFN,
                               durationParams,
                               stepList,
                               outputName,
@@ -64,13 +60,13 @@ outputTG = join(outputPath, "%s.TextGrid" % outputName)
 outputImageFN = join(outputPath, "%s.png" % outputName)
 filterFunc = None
 includeUnlabeledRegions = True
-durationParams = duration_morph.getManipulatedParamaters(join(path, fromTGFN),
+durationParams = duration_morph.getManipulatedParamaters(fromTGFN,
                                                          tierName,
                                                          twentyPercentMore,
                                                          filterFunc,
                                                          includeUnlabeledRegions)
 
-duration_morph.changeDuration(join(path, fromWavFN),
+duration_morph.changeDuration(fromWavFN,
                               durationParams,
                               stepList,
                               outputName,
