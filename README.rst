@@ -3,6 +3,12 @@
 ProMo (Prosody Morph)
 -----------------------
 
+.. image:: https://travis-ci.org/timmahrt/ProMo.svg?branch=master
+    :target: https://travis-ci.org/timmahrt/ProMo
+
+.. image:: https://coveralls.io/repos/github/timmahrt/ProMo/badge.svg?branch=master
+    :target: https://coveralls.io/github/timmahrt/ProMo?branch=master
+    
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg?
    :target: http://opensource.org/licenses/MIT
    
@@ -145,6 +151,8 @@ Major revisions
 Ver 1.1 (February 22, 2016)
 
 - f0 morph code for modifying speaker pitch range and average pitch
+
+- (October 20, 2016) Added integration tests with travis CI and coveralls support.
 
 Ver 1.0 (January 19, 2016)
 
