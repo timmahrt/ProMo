@@ -12,7 +12,7 @@ from promo import f0_morph
 from promo.morph_utils import utils
 
 # Define the arguments for the code
-root = join('.', 'files')
+root = os.path.abspath(join('.', 'files'))
 praatEXE = r"C:\Praat.exe"  # Windows path
 #praatEXE = "/Applications/Praat.app/Contents/MacOS/Praat"  # Mac path
 
