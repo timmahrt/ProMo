@@ -124,7 +124,13 @@ class IntegrationTests(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.root = join(".", "files")
+        root = os.path.join(_root, "files")
+        self.oldRoot = os.getcwd()
+        os.chdir(_root)
+        self.startingList = os.listdir(root)
+        self.startingDir = os.getcwd()
+
+        self.root = root
         
         self.fromWavFN = join(self.root, "mary1.wav")
         self.fromTGFN = join(self.root, "mary1.TextGrid")
@@ -133,11 +139,6 @@ class IntegrationTests(unittest.TestCase):
         self.minPitch = 50
         self.maxPitch = 350
         
-        root = os.path.join(_root, "files")
-        self.oldRoot = os.getcwd()
-        os.chdir(_root)
-        self.startingList = os.listdir(root)
-        self.startingDir = os.getcwd()
 
     def tearDown(self):
         '''Remove any files generated during the test'''
