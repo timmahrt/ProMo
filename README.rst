@@ -148,6 +148,10 @@ Duration morphing (examples/duration_manipulation_example.py):
 Major revisions
 ================
 
+Ver 1.2 (January 27, 2017)
+
+- added code for reshaping pitch accents (shift alignment, add plateau, or change height)
+
 Ver 1.1 (February 22, 2016)
 
 - f0 morph code for modifying speaker pitch range and average pitch
