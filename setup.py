@@ -16,6 +16,7 @@ setup(name='promo',
       packages=['promo',
                 'promo.morph_utils'],
       license='LICENSE',
+      description='Library for manipulating pitch and duration in an algorithmic way, for resynthesizing speech',
       long_description=codecs.open('README.rst', 'r', encoding="utf-8").read(),
 #       install_requires=[], # No requirements! # requires 'from setuptools import setup'
       )
