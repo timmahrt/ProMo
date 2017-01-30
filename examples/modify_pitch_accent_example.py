@@ -73,7 +73,7 @@ targetPitchList = [(timeV, pitchV) for timeV, pitchV in pitchList
 accent = modify_pitch_accent.PitchAccent(targetPitchList)
 accent.addPlateau(0.05)  # Peak is dragged out for 0.05 seconds
 accent.adjustPeakHeight(60)  # Plateau is raised by 60 hz
-accent.shiftaccent(-0.03)  # Recenter the plateau around the original peak
+accent.shiftAccent(-0.03)  # Recenter the plateau around the original peak
 
 # 4th - integrate results
 moddedPitchList = accent.reintegrate(pitchList)
@@ -108,7 +108,7 @@ for plateauAmount in [0.0, 0.04, 0.08]:
             accent = modify_pitch_accent.PitchAccent(targetPitchList)
             accent.addPlateau(plateauAmount)
             accent.adjustPeakHeight(heightAmount)
-            accent.shiftaccent(shiftAmount)
+            accent.shiftAccent(shiftAmount)
             
             # 4th - integrate results
             moddedPitchList = accent.reintegrate(pitchList)
