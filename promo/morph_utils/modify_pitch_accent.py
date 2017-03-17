@@ -39,6 +39,11 @@ class PitchAccent(object):
         
         self.peakI = pitchList.index(maxV)
     
+        timeList = [timeV for timeV, _ in self.pointList]
+        self.minT = min(timeList)
+        self.maxT = max(timeList)
+    
+    
     def adjustPeakHeight(self, heightAmount):
         '''
         Adjust peak height
@@ -74,10 +79,9 @@ class PitchAccent(object):
         if plateauAmount == 0:
             return
         
-        leftSide = self.pointList[:self.peakI]
-        rightSide = self.pointList[self.peakI:]
         maxPoint = self.pointList[self.peakI]
         
+        # Define the plateau
         if pitchSampFreq is not None:
             numSteps = abs(int(plateauAmount / pitchSampFreq))
             timeChangeList = [stepV * pitchSampFreq
@@ -88,13 +92,19 @@ class PitchAccent(object):
             
         # Shift the side being pushed by the plateau
         if plateauAmount < 0:  # Plateau moves left of the peak
-            plateauPoints = [(maxPoint[0] - timeChange, maxPoint[1])
+            leftSide = self.pointList[:self.peakI]
+            rightSide = self.pointList[self.peakI:]
+            
+            plateauPoints = [(maxPoint[0] + timeChange, maxPoint[1])
                              for timeChange in timeChangeList]
             leftSide = [(timeV + plateauAmount, f0V)
                         for timeV, f0V in leftSide]
             self.netLeftShift += plateauAmount
             
         elif plateauAmount > 0:  # Plateau moves right of the peak
+            leftSide = self.pointList[:self.peakI + 1]
+            rightSide = self.pointList[self.peakI + 1:]
+            
             plateauPoints = [(maxPoint[0] + timeChange, maxPoint[1])
                              for timeChange in timeChangeList]
             rightSide = [(timeV + plateauAmount, f0V)
@@ -140,7 +150,13 @@ class PitchAccent(object):
         '''
         Integrates the pitch values of the accent into a larger pitch contour
         '''
+        # Erase the original region of the accent
+        fullPointList = _deletePoints(fullPointList, self.minT, self.maxT)
+        
+        # Erase the new region of the accent
         fullPointList = self.deleteOverlapping(fullPointList)
+        
+        # Add the accent into the full pitch list
         outputPointList = fullPointList + self.pointList
         outputPointList.sort()
         

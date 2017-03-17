@@ -8,7 +8,7 @@ Created on Aug 29, 2014
 from setuptools import setup
 import codecs
 setup(name='promo',
-      version='1.2.1',
+      version='1.2.2',
       author='Tim Mahrt',
       author_email='timmahrt@gmail.com',
       url='https://github.com/timmahrt/ProMo',
