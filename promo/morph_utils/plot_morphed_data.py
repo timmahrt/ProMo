@@ -25,8 +25,6 @@ def plotSinglePitchTrack(fromTuple, fnFullPath):
     _matplotlibCheck()
     
     plt.hold(True)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
 
     fig, (ax0) = plt.subplots(nrows=1)
 
@@ -41,15 +39,13 @@ def plotSinglePitchTrack(fromTuple, fnFullPath):
 #     plt.legend([plot1, plot2, plot3], ["From", "To", "Merged line"])
 
     plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    plt.close()
+    plt.close(fig)
 
 
 def plotTwoPitchTracks(fromTuple, toTuple, fnFullPath):
     _matplotlibCheck()
     
     plt.hold(True)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
 
     fig, (ax0, ax1) = plt.subplots(nrows=2)
 
@@ -72,7 +68,7 @@ def plotTwoPitchTracks(fromTuple, toTuple, fnFullPath):
 #     plt.legend([plot1, plot2, plot3], ["From", "To", "Merged line"])
 
     plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    plt.close()
+    plt.close(fig)
 
 
 def plotF0(fromTuple, toTuple, mergeTupleList, fnFullPath):
@@ -82,8 +78,6 @@ def plotF0(fromTuple, toTuple, mergeTupleList, fnFullPath):
     _matplotlibCheck()
     
     plt.hold(True)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
 
     fig, (ax0) = plt.subplots(nrows=1)
 
@@ -112,7 +106,7 @@ def plotF0(fromTuple, toTuple, mergeTupleList, fnFullPath):
 #     plt.legend([plot1, plot2, plot3], ["From", "To", "Merged line"])
 
     plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    plt.close()
+    plt.close(fig)
 
 
 def plotIntensity(fromDataList, toDataList, mergeTupleList,
@@ -182,7 +176,7 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList,
                borderaxespad=0.)
 
     plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    plt.close()
+    plt.close(fig)
 
 
 def plotDuration(fromDurationList, toDurationList, resultDataList,
@@ -204,7 +198,7 @@ def plotDuration(fromDurationList, toDurationList, resultDataList,
 
     # Pre-plotting work
     plt.hold(True)
-    _, ax0 = plt.subplots(nrows=1)
+    fig, ax0 = plt.subplots(nrows=1)
 
     # Labels
     ax0.set_title("Plot of Duration Morph")
@@ -247,4 +241,4 @@ def plotDuration(fromDurationList, toDurationList, resultDataList,
 
     # Save and cleanup
     plt.savefig(fnFullPath, dpi=300, bbox_inches='tight')
-    plt.close()
+    plt.close(fig)
