@@ -12,6 +12,7 @@ few sample points, the morph process will fail.
 @author: Tim
 '''
 
+import os
 from os.path import join
 
 from praatio import pitch_and_intensity
@@ -24,7 +25,7 @@ from promo.morph_utils import interpolation
 
 # Define the arguments for the code
 
-root = join('.', 'files')
+root = os.path.abspath(join('.', 'files'))
 praatEXE = r"C:\Praat.exe"  # Windows paths
 praatEXE = "/Applications/Praat.app/Contents/MacOS/Praat"  # Mac paths
 
