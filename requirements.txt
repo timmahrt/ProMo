@@ -1,1 +1,1 @@
-praatio>=3.3.0
+praatio>=3.5.4

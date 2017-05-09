@@ -36,7 +36,15 @@ class IntegrationTests(unittest.TestCase):
     """Integration tests"""
 
 
-    def test_add_tiers(self):
+    def test_modify_pitch_accent(self):
+        """Running 'modify_pitch_accent_example.py'"""
+        print("\nmodify_pitch_accent_example.py" + "\n" + "-" * 10)
+        try:
+            import modify_pitch_accent_example
+        except utils.FileNotFound:
+            pass
+        
+    def test_duration_manipulation(self):
         """Running 'duration_manipulation_example.py'"""
         print("\nduration_manipulation_example.py" + "\n" + "-" * 10)
         try:
@@ -44,7 +52,7 @@ class IntegrationTests(unittest.TestCase):
         except utils.FileNotFound:
             pass
 
-    def test_calculate_duration(self):
+    def test_pitch_morph(self):
         """Running 'pitch_morph_example.py'"""
         print("\npitch_morph_example.py" + "\n" + "-" * 10)
         try:
@@ -52,7 +60,7 @@ class IntegrationTests(unittest.TestCase):
         except utils.FileNotFound:
             pass
 
-    def test_delete_vowels(self):
+    def test_pitch_morph_to_contour(self):
         """Running 'pitch_morph_to_pitch_contour.py'"""
         print("\npitch_morph_to_pitch_contour.py" + "\n" + "-" * 10)
         try:
