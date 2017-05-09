@@ -12,6 +12,7 @@ from os.path import join
 
 from praatio import tgio
 from praatio import dataio
+from praatio import audioio
 from praatio import pitch_and_intensity
 from praatio import praat_scripts
 from praatio import praatio_scripts
@@ -56,7 +57,7 @@ piList = pitch_and_intensity.audioToPI(root, wavFN, rootOutputPath,
                                        praatEXE, minPitch, maxPitch)
 pitchList = [(timeV, pitchV) for timeV, pitchV, _ in piList]
 
-dur = praatio_scripts.getDuration(join(root, wavFN))
+dur = audioio.WavQueryObj(join(root, wavFN)).getDuration()
 pointObj = dataio.PointObject2D(pitchList, dataio.PITCH, 0, dur)
 pointObj.save(join(rootOutputPath, originalPitchFN))
 
