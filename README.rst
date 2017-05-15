@@ -218,7 +218,7 @@ Installation
 If you on Windows, you can use the installer found here (check that it is up to date though)
 `Windows installer <http://www.timmahrt.com/python_installers>`_
 
-PraatIO is on pypi and can be installed or upgraded from the command-line shell with pip like so
+PraatIO is on pypi and can be installed or upgraded from the command-line shell with pip like so::
 
     pip install praatio --upgrade
 

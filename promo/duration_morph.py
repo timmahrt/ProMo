@@ -247,8 +247,8 @@ def textgridMorphDuration(fromTGFN, toTGFN):
     
     This assumes the two textgrids have the same number of segments.
     '''
-    fromTG = tgio.openTextGrid(fromTGFN)
-    toTG = tgio.openTextGrid(toTGFN)
+    fromTG = tgio.openTextgrid(fromTGFN)
+    toTG = tgio.openTextgrid(toTGFN)
     adjustedTG = tgio.Textgrid()
 
     for tierName in fromTG.tierNameList:
@@ -262,7 +262,7 @@ def textgridMorphDuration(fromTGFN, toTGFN):
 
 def textgridManipulateDuration(tgFN, ratioList):
 
-    tg = tgio.openTextGrid(tgFN)
+    tg = tgio.openTextgrid(tgFN)
 
     adjustedTG = tgio.Textgrid()
 
@@ -311,7 +311,7 @@ def _morphPointTier(tier, ratioList):
         newEntryList.append((newTime, label))
     
     maxT = tier.maxTimestamp + cumulativeAdjustAmount
-    return tier.newTier(entryList=newEntryList, maxTimestamp=maxT)
+    return tier.new(entryList=newEntryList, maxTimestamp=maxT)
 
 
 def _morphIntervalTier(tier, ratioList):
@@ -370,4 +370,4 @@ def _morphIntervalTier(tier, ratioList):
         newEntryList.append((newStart, newStop, label))
     
     newMax = tier.maxTimestamp + cumulativeAdjustAmount
-    return tier.newTier(entryList=newEntryList, maxTimestamp=newMax)
+    return tier.new(entryList=newEntryList, maxTimestamp=newMax)

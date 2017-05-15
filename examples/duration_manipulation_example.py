@@ -45,6 +45,8 @@ durationParams = duration_morph.getMorphParameters(fromTGFN,
                                                    tierName,
                                                    filterFunc,
                                                    includeUnlabeledRegions)
+morphedTG = duration_morph.textgridMorphDuration(fromTGFN, toTGFN)
+morphedTG.save(outputTG)
 duration_morph.changeDuration(fromWavFN,
                               durationParams,
                               stepList,

@@ -15,11 +15,11 @@ def getIntervals(fn, tierName, filterFunc=None,
     Get information about the 'extract' tier, used by several merge scripts
     '''
 
-    tg = tgio.openTextGrid(fn)
+    tg = tgio.openTextgrid(fn)
     
     tier = tg.tierDict[tierName]
     if includeUnlabeledRegions is True:
-        tier = tier.fillInBlanks()
+        tier = tgio._fillInBlanks(tier)
 
     entryList = tier.entryList
     if filterFunc is not None:
