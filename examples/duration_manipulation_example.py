@@ -33,6 +33,7 @@ fromTGFN = join(root, fromName + ".TextGrid")
 toTGFN = join(root, toName + ".TextGrid")
 
 outputPath = join(root, "duration_morph")
+utils.makeDir(outputPath)
 outputName = "%s_%s_dur_morph" % (fromName, toName)
 outputTG = join(outputPath, "%s.TextGrid" % outputName)
 outputImageFN = join(outputPath, "%s.png" % outputName)
