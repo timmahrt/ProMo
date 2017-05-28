@@ -12,6 +12,7 @@ from os.path import join
 from praatio import tgio
 from praatio import dataio
 from praatio import praat_scripts
+from praatio.utilities import utils as praatio_utils
 
 from promo.morph_utils import utils
 from promo.morph_utils import audio_scripts
@@ -45,7 +46,8 @@ def getPitchForIntervals(data, tgFN, tierName):
 def f0Morph(fromWavFN, pitchPath, stepList,
             outputName, doPlotPitchSteps, fromPitchData, toPitchData,
             outputMinPitch, outputMaxPitch, praatEXE, keepPitchRange=False,
-            keepAveragePitch=False):
+            keepAveragePitch=False, sourcePitchDataList=None,
+            minIntervalLength=0.3):
     '''
     Resynthesizes the pitch track from a source to a target wav file
 
@@ -62,9 +64,32 @@ def f0Morph(fromWavFN, pitchPath, stepList,
     By default, everything is morphed, but it is possible to maintain elements
     of the original speaker's pitch (average pitch and pitch range) by setting
     the appropriate flag)
+    
+    sourcePitchDataList: if passed in, any regions unspecified by
+                         fromPitchData will be sampled from this list.  In
+                         essence, this allows one to leave segments of
+                         the original pitch contour untouched by the
+                         morph process.
     '''
 
     fromDuration = audio_scripts.getSoundFileDuration(fromWavFN)
+
+    # Find source pitch samples that will be mixed in with the target
+    # pitch samples later
+    nonMorphPitchData = []
+    if sourcePitchDataList is not None:
+        timeList = sorted(fromPitchData)
+        timeList = [(row[0][0], row[-1][0]) for row in timeList]
+        endTime = sourcePitchDataList[-1][0]
+        invertedTimeList = praatio_utils.invertIntervalList(timeList, endTime)
+        invertedTimeList = [(start, stop) for start, stop in invertedTimeList
+                            if stop - start > minIntervalLength]
+        
+        for start, stop in invertedTimeList:
+            pitchList = praatio_utils.getValuesInInterval(sourcePitchDataList,
+                                                          start,
+                                                          stop)
+            nonMorphPitchData.extend(pitchList)
 
     # Iterative pitch tier data path
     pitchTierPath = join(pitchPath, "pitchTiers")
@@ -99,6 +124,10 @@ def f0Morph(fromWavFN, pitchPath, stepList,
         if keepAveragePitch is True:
             outputDataList = morph_sequence.morphAveragePitch(outputDataList,
                                                               fromPitchData)
+        
+        if sourcePitchDataList is not None:
+            outputDataList.extend(nonMorphPitchData)
+            outputDataList.sort()
         
         stepOutputName = "%s_%0.3g" % (outputName, stepList[i])
         pitchFNFullPath = join(pitchTierPath, "%s.PitchTier" % stepOutputName)
