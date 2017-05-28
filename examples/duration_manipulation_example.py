@@ -27,7 +27,7 @@ toWavFN = join(root, toName + ".wav")
 fromPitchFN = fromName + ".txt"
 toPitchFN = toName + ".txt"
 
-tierName = "PhonAlign"
+tierName = "words"
 
 fromTGFN = join(root, fromName + ".TextGrid")
 toTGFN = join(root, toName + ".TextGrid")

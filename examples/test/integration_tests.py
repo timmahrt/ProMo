@@ -143,7 +143,7 @@ class IntegrationTests(unittest.TestCase):
         self.fromWavFN = join(self.root, "mary1.wav")
         self.fromTGFN = join(self.root, "mary1.TextGrid")
         self.toTGFN = join(self.root, "mary2.TextGrid")
-        self.tierName = "PhonAlign"
+        self.tierName = "words"
         self.minPitch = 50
         self.maxPitch = 350
         

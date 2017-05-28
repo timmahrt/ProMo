@@ -64,7 +64,7 @@ pointObj.save(join(rootOutputPath, originalPitchFN))
 
 # 2nd - get region to manipulate.  Let's make the subject more emphatic!
 tg = tgio.openTextgrid(join(root, "mary1.TextGrid"))
-tier = tg.tierDict["TokensAlign"]
+tier = tg.tierDict["words"]
 start, stop, _ = tier.entryList[0]  # Getting info for the first word
 
 targetPitchList = [(timeV, pitchV) for timeV, pitchV in pitchList

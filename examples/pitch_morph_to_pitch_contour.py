@@ -61,7 +61,7 @@ toPitchList = interpolation.quadraticInterpolation(toPitchList, 4, 1000, 0)
 
 # 3rd select which sections to align.
 # We'll use textgrids for this purpose.
-tierName = "PhonAlign"
+tierName = "words"
 fromPitch = f0_morph.getPitchForIntervals(fromPitchList, fromTGFN, tierName)
 toPitch = f0_morph.getPitchForIntervals(toPitchList, fromTGFN, tierName)
 
