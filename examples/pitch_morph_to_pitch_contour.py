@@ -43,8 +43,9 @@ toPitchFN = toName + ".PitchTier"
 
 # Prepare the data for morphing
 # 1st load it into memory
-fromPitchList = pitch_and_intensity.audioToPI(root, fromWavFN, root,
-                                              fromPitchFN, praatEXE, minPitch,
+fromPitchList = pitch_and_intensity.extractPI(join(root, fromWavFN),
+                                              join(root, fromPitchFN),
+                                              praatEXE, minPitch,
                                               maxPitch, forceRegenerate=False)
 fromPitchList = [(time, pitch) for time, pitch, _ in fromPitchList]
 

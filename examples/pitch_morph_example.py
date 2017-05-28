@@ -33,11 +33,13 @@ toTGFN = join(root, os.path.splitext(toWavFN)[0] + ".TextGrid")
 
 # Prepare the data for morphing
 # 1ST load it into memory
-fromPitch = pitch_and_intensity.audioToPI(root, fromWavFN, root,
-                                          fromPitchFN, praatEXE, minPitch,
+fromPitch = pitch_and_intensity.extractPI(join(root, fromWavFN),
+                                          join(root, fromPitchFN),
+                                          praatEXE, minPitch,
                                           maxPitch, forceRegenerate=False)
-toPitch = pitch_and_intensity.audioToPI(root, toWavFN, root,
-                                        toPitchFN, praatEXE, minPitch,
+toPitch = pitch_and_intensity.extractPI(join(root, toWavFN),
+                                        join(root, toPitchFN),
+                                        praatEXE, minPitch,
                                         maxPitch, forceRegenerate=False)
 
 # 2ND remove intensity values
@@ -46,10 +48,15 @@ toPitch = [(time, pitch) for time, pitch, _ in toPitch]
 
 # 3RD select which sections to align.
 # We'll use textgrids for this purpose.
-tierName = "PhonAlign"
+tierName = "words"
 fromPitch = f0_morph.getPitchForIntervals(fromPitch, fromTGFN, tierName)
 toPitch = f0_morph.getPitchForIntervals(toPitch, toTGFN, tierName)
 
+pitchTier = pitch_and_intensity.extractPitchTier(join(root, fromWavFN),
+                                                 join(root, "mary1.PitchTier"),
+                                                 praatEXE, minPitch,
+                                                 maxPitch,
+                                                 forceRegenerate=True)
 # FINALLY: Run the morph process
 f0_morph.f0Morph(fromWavFN=join(root, fromWavFN),
                  pitchPath=root,
@@ -60,8 +67,8 @@ f0_morph.f0Morph(fromWavFN=join(root, fromWavFN),
                  toPitchData=toPitch,
                  outputMinPitch=minPitch,
                  outputMaxPitch=maxPitch,
-                 praatEXE=praatEXE)
-
+                 praatEXE=praatEXE,
+                 sourcePitchDataList=pitchTier.pointList)
 
 ####################
 # The remaining examples below demonstrate the use of

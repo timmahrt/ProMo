@@ -6,7 +6,7 @@ Object class = "TextGrid"
 <exists>
 4
 "IntervalTier"
-"Tokens"
+"utterances"
 0
 1.275937
 1
@@ -14,7 +14,7 @@ Object class = "TextGrid"
 1.2759375
 "mary rolled the barrel"
 "IntervalTier"
-"PhonAlign"
+"phones"
 0
 1.2759
 15
@@ -64,7 +64,7 @@ Object class = "TextGrid"
 1.2759
 "l"
 "IntervalTier"
-"TokensAlign"
+"words"
 0
 1.2759
 4

@@ -52,8 +52,8 @@ if not os.path.exists(rootOutputPath):
     os.mkdir(rootOutputPath)
 
 # 1st - get pitch
-piList = pitch_and_intensity.audioToPI(root, wavFN, rootOutputPath,
-                                       pitchIntensityFN,
+piList = pitch_and_intensity.extractPI(join(root, wavFN),
+                                       join(rootOutputPath, pitchIntensityFN),
                                        praatEXE, minPitch, maxPitch)
 pitchList = [(timeV, pitchV) for timeV, pitchV, _ in piList]
 
