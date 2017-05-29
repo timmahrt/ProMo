@@ -349,11 +349,11 @@ def _morphIntervalTier(tier, ratioList):
             if start <= rStart:
                 pass
             elif start > rStart and start <= rStop:
-                newStart += _getTimeDiff(start, rStart, ratio)
+                newStart += _getTimeDiff(rStart, start, ratio)
                 
             # Adjusting the stop position based on overlap with the
             # current adjust interval
-            if stop >= ratioList[i][1]:
+            if stop >= rStop:
                 newStop += _getTimeDiff(rStart, rStop, ratio)
             elif stop < rStop and stop >= rStart:
                 newStop += _getTimeDiff(rStart, stop, ratio)
