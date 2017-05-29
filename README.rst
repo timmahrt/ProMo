@@ -149,9 +149,9 @@ Tutorials
 
 Tutorials for learning about prosody manipulation and how to use ProMo are available.
 
-`Tutorial 1.1: Intro to ProMo <https://github.com/timmahrt/ProMo/blob/master/tutorials/tutorial1_1_intro_to_promo.ipynb>`_
+`Tutorial 1.1: Intro to ProMo <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/master/tutorials/tutorial1_1_intro_to_promo.ipynb>`_
 
-`Tutorial 1.2: Pitch manipulation tutorial <https://github.com/timmahrt/ProMo/blob/master/tutorials/tutorial1_2_pitch_manipulations.ipynb>`_
+`Tutorial 1.2: Pitch manipulation tutorial <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/master/tutorials/tutorial1_2_pitch_manipulations.ipynb>`_
 
 
 Major revisions
