@@ -12,6 +12,14 @@ ProMo (Prosody Morph)
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg?
    :target: http://opensource.org/licenses/MIT
    
+*Questions?  Comments?  Feedback?  Chat with us on gitter!*
+
+.. image:: https://badges.gitter.im/pythonProMo/Lobby.svg?
+   :alt: Join the chat at https://gitter.im/pythonProMo/Lobby
+   :target: https://gitter.im/pythonProMo/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
+-----
+   
 A library for manipulating pitch and duration in an algorithmic way, for
 resynthesizing speech.
 
