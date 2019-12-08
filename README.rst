@@ -19,7 +19,7 @@ ProMo (Prosody Morph)
    :target: https://gitter.im/pythonProMo/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 -----
-   
+
 A library for manipulating pitch and duration in an algorithmic way, for
 resynthesizing speech.
 
@@ -206,7 +206,7 @@ Matplotlib is needed if you want to plot graphs.
 Scipy is needed if you want to use interpolation--typically if you have stylized
 pitch contours (in praat PitchTier format, for example) that you want to use in
 your morphing).
-`Matplotlib website <http://scipy.org/>`_
+`Scipy website <http://scipy.org/>`_
 
 Matplotlib and SciPy are non-trivial to install, as they depends on several large
 packages.  You can
