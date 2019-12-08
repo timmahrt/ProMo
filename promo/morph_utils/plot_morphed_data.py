@@ -23,8 +23,6 @@ def _matplotlibCheck():
 
 def plotSinglePitchTrack(fromTuple, fnFullPath):
     _matplotlibCheck()
-    
-    plt.hold(True)
 
     fig, (ax0) = plt.subplots(nrows=1)
 
@@ -44,8 +42,6 @@ def plotSinglePitchTrack(fromTuple, fnFullPath):
 
 def plotTwoPitchTracks(fromTuple, toTuple, fnFullPath):
     _matplotlibCheck()
-    
-    plt.hold(True)
 
     fig, (ax0, ax1) = plt.subplots(nrows=2)
 
@@ -76,8 +72,6 @@ def plotF0(fromTuple, toTuple, mergeTupleList, fnFullPath):
     Plots the original data in a graph above the plot of the dtw'ed data
     '''
     _matplotlibCheck()
-    
-    plt.hold(True)
 
     fig, (ax0) = plt.subplots(nrows=1)
 
@@ -131,8 +125,6 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList,
 
     print(max(fromDataList))
     print(max(toDataList))
-
-    plt.hold(True)
 
     fig, ax0 = plt.subplots(nrows=1)
 #     fig, (ax0, ax1, ax2) = plt.subplots(nrows=3)
@@ -197,7 +189,6 @@ def plotDuration(fromDurationList, toDurationList, resultDataList,
     iterN = range(n)
 
     # Pre-plotting work
-    plt.hold(True)
     fig, ax0 = plt.subplots(nrows=1)
 
     # Labels
