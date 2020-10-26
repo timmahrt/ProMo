@@ -8,7 +8,7 @@ Created on Aug 29, 2014
 from setuptools import setup
 import io
 setup(name='promo',
-      version='1.3.1',
+      version='1.3.2',
       author='Tim Mahrt',
       author_email='timmahrt@gmail.com',
       url='https://github.com/timmahrt/ProMo',
