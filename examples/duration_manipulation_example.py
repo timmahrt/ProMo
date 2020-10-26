@@ -56,6 +56,9 @@ duration_morph.changeDuration(fromWavFN,
                               outputMaxPitch=maxPitch,
                               praatEXE=praatEXE)
 
+duration_morph.outputMorphPlot(fromTGFN, toTGFN, tierName, durationParams, stepList,
+                               outputImageFN)
+
 # Increase duration of all segments by 20 percent
 twentyPercentMore = lambda x: (x * 1.20)
 outputName = "%s_20_percent_more" % fromName

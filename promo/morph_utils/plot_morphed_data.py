@@ -220,7 +220,7 @@ def plotDuration(fromDurationList, toDurationList, resultDataList,
                  labelList[i])
 
         # The column data
-        ax0.bar(left=iterN, height=row, bottom=bottom, width=width,
+        ax0.bar(x=iterN, height=row, bottom=bottom, width=width,
                 alpha=0.6, color=colorTuple[i % 3])
 
         # Update the start positions for the next iteration
