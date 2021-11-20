@@ -1,8 +1,8 @@
-'''
+"""
 Created on Jan 18, 2016
 
 @author: Tim
-'''
+"""
 
 import os
 from os.path import join
@@ -11,7 +11,7 @@ from promo import duration_morph
 from promo.morph_utils import utils
 
 # Define the arguments for the code
-root = os.path.abspath(join('.', "files"))
+root = os.path.abspath(join(".", "files"))
 # praatEXE = r"C:\Praat.exe"  # Windows
 praatEXE = "/Applications/Praat.app/Contents/MacOS/Praat"  # Mac
 
@@ -41,23 +41,24 @@ filterFunc = None
 includeUnlabeledRegions = False
 
 # Morph the duration from one file to another
-durationParams = duration_morph.getMorphParameters(fromTGFN,
-                                                   toTGFN,
-                                                   tierName,
-                                                   filterFunc,
-                                                   includeUnlabeledRegions)
+durationParams = duration_morph.getMorphParameters(
+    fromTGFN, toTGFN, tierName, filterFunc, includeUnlabeledRegions
+)
 morphedTG = duration_morph.textgridMorphDuration(fromTGFN, toTGFN)
-morphedTG.save(outputTG)
-duration_morph.changeDuration(fromWavFN,
-                              durationParams,
-                              stepList,
-                              outputName,
-                              outputMinPitch=minPitch,
-                              outputMaxPitch=maxPitch,
-                              praatEXE=praatEXE)
+morphedTG.save(outputTG, format="short_textgrid", includeBlankSpaces=True)
+duration_morph.changeDuration(
+    fromWavFN,
+    durationParams,
+    stepList,
+    outputName,
+    outputMinPitch=minPitch,
+    outputMaxPitch=maxPitch,
+    praatEXE=praatEXE,
+)
 
-duration_morph.outputMorphPlot(fromTGFN, toTGFN, tierName, durationParams, stepList,
-                               outputImageFN)
+duration_morph.outputMorphPlot(
+    fromTGFN, toTGFN, tierName, durationParams, stepList, outputImageFN
+)
 
 # Increase duration of all segments by 20 percent
 twentyPercentMore = lambda x: (x * 1.20)
@@ -66,16 +67,16 @@ outputTG = join(outputPath, "%s.TextGrid" % outputName)
 outputImageFN = join(outputPath, "%s.png" % outputName)
 filterFunc = None
 includeUnlabeledRegions = True
-durationParams = duration_morph.getManipulatedParamaters(fromTGFN,
-                                                         tierName,
-                                                         twentyPercentMore,
-                                                         filterFunc,
-                                                         includeUnlabeledRegions)
+durationParams = duration_morph.getManipulatedParamaters(
+    fromTGFN, tierName, twentyPercentMore, filterFunc, includeUnlabeledRegions
+)
 
-duration_morph.changeDuration(fromWavFN,
-                              durationParams,
-                              stepList,
-                              outputName,
-                              outputMinPitch=minPitch,
-                              outputMaxPitch=maxPitch,
-                              praatEXE=praatEXE)
+duration_morph.changeDuration(
+    fromWavFN,
+    durationParams,
+    stepList,
+    outputName,
+    outputMinPitch=minPitch,
+    outputMaxPitch=maxPitch,
+    praatEXE=praatEXE,
+)

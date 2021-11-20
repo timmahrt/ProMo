@@ -10,14 +10,15 @@ import io
 
 setup(
     name="promo",
-    version="1.3.3",
+    python_requires=">3.6.0",
+    version="2.0.0",
     author="Tim Mahrt",
     author_email="timmahrt@gmail.com",
     url="https://github.com/timmahrt/ProMo",
     package_dir={"promo": "promo"},
     packages=["promo", "promo.morph_utils"],
     license="LICENSE",
-    install_requires=["praatio ~= 4.1"],
+    install_requires=["praatio >= 5.0", "typing_extensions"],
     description=(
         "Library for manipulating pitch and duration in an "
         "algorithmic way, for resynthesizing speech"
