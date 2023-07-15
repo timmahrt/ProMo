@@ -18,7 +18,7 @@ setup(
     package_dir={"promo": "promo"},
     packages=["promo", "promo.morph_utils"],
     license="LICENSE",
-    install_requires=["praatio >= 5.0", "typing_extensions"],
+    install_requires=["praatio ~= 6.0", "typing_extensions"],
     description=(
         "Library for manipulating pitch and duration in an "
         "algorithmic way, for resynthesizing speech"
