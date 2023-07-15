@@ -3,11 +3,11 @@
 ProMo (Prosody Morph)
 -----------------------
 
-.. image:: https://travis-ci.org/timmahrt/ProMo.svg?branch=master
+.. image:: https://travis-ci.org/timmahrt/ProMo.svg?branch=main
     :target: https://travis-ci.org/timmahrt/ProMo
 
-.. image:: https://coveralls.io/repos/github/timmahrt/ProMo/badge.svg?branch=master
-    :target: https://coveralls.io/github/timmahrt/ProMo?branch=master
+.. image:: https://coveralls.io/repos/github/timmahrt/ProMo/badge.svg?branch=main
+    :target: https://coveralls.io/github/timmahrt/ProMo?branch=main
     
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg?
    :target: http://opensource.org/licenses/MIT
@@ -157,9 +157,9 @@ Tutorials
 
 Tutorials for learning about prosody manipulation and how to use ProMo are available.
 
-`Tutorial 1.1: Intro to ProMo <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/master/tutorials/tutorial1_1_intro_to_promo.ipynb>`_
+`Tutorial 1.1: Intro to ProMo <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/main/tutorials/tutorial1_1_intro_to_promo.ipynb>`_
 
-`Tutorial 1.2: Pitch manipulation tutorial <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/master/tutorials/tutorial1_2_pitch_manipulations.ipynb>`_
+`Tutorial 1.2: Pitch manipulation tutorial <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/main/tutorials/tutorial1_2_pitch_manipulations.ipynb>`_
 
 
 Version History
