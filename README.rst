@@ -173,17 +173,15 @@ Please view `CHANGELOG.md <https://github.com/timmahrt/promo/blob/main/CHANGELOG
 Requirements
 ==============
 
-``Python 2.7.*`` or above
-
 ``Python 3.3.*`` or above (or below, probably)
 
-My praatIO library is used extensively and can be downloaded 
+My praatIO library is required and can be downloaded
 `here <https://github.com/timmahrt/praatIO>`_
 
-Matplotlib is needed if you want to plot graphs.
+Matplotlib is required if you want to plot graphs.
 `Matplotlib website <http://matplotlib.org/>`_
 
-Scipy is needed if you want to use interpolation--typically if you have stylized
+Scipy is required if you want to use interpolation--typically if you have stylized
 pitch contours (in praat PitchTier format, for example) that you want to use in
 your morphing).
 `Scipy website <http://scipy.org/>`_
@@ -215,6 +213,8 @@ Otherwise, to manually install, after downloading the source from github, from a
 If python is not in your path, you'll need to enter the full path e.g.::
 
 	C:\Python27\python.exe setup.py install
+
+If you are using ``Python 2.x`` or ``Python < 3.7``, you can use `Promo 1.x`.
 
 Usage
 =========
