@@ -30,6 +30,14 @@ or through algorithmic manipulations of the source pitch contour.
 .. sectnum::
 .. contents::
 
+Documentation
+=============
+
+Automatically generated pdocs can be found here:
+
+http://timmahrt.github.io/ProMo/
+
+
 Common Use Cases
 ================
 
