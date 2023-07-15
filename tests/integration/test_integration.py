@@ -115,7 +115,7 @@ class TestIntegration(unittest.TestCase):
                 outputMaxPitch=self.maxPitch,
                 praatEXE=praatEXE,
             )
-        except utils.FileNotFound:
+        except errors.FileNotFound:
             pass
 
     def test_textgridMorphDuration(self):
