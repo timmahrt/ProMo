@@ -162,32 +162,12 @@ Tutorials for learning about prosody manipulation and how to use ProMo are avail
 `Tutorial 1.2: Pitch manipulation tutorial <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/master/tutorials/tutorial1_2_pitch_manipulations.ipynb>`_
 
 
-Major revisions
+Version History
 ================
 
-Ver 1.3 (May 29, 2017)
+*ProMo uses semantic versioning (Major.Minor.Patch)*
 
-- added tutorials
-
-- f0Morph() can now exclude certain regions from the morph process if desired
-
-Ver 1.2 (January 27, 2017)
-
-- added code for reshaping pitch accents (shift alignment, add plateau, or change height)
-
-Ver 1.1 (February 22, 2016)
-
-- f0 morph code for modifying speaker pitch range and average pitch
-
-- (October 20, 2016) Added integration tests with travis CI and coveralls support.
-
-Ver 1.0 (January 19, 2016)
-
-- first public release.
-
-Beta (July 1, 2013)
-
-- first version which was utilized in my dissertation work
+Please view `CHANGELOG.md <https://github.com/timmahrt/promo/blob/main/CHANGELOG.md>` for version history.
 
 
 Requirements
