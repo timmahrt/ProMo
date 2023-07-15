@@ -39,7 +39,7 @@ def getPitchForIntervals(data, tgFN, tierName):
     Preps data for use in f0Morph
     """
     tg = textgrid.openTextgrid(tgFN, includeEmptyIntervals=False)
-    data = tg.tierDict[tierName].getValuesInIntervals(data)
+    data = tg.getTier(tierName).getValuesInIntervals(data)
     data = [dataList for _, dataList in data]
 
     return data
@@ -130,7 +130,6 @@ def f0Morph(
     # 3. Save the pitch data and resynthesize the pitch
     mergedDataList = []
     for i in range(0, len(finalOutputList)):
-
         outputDataList = finalOutputList[i]
 
         if keepPitchRange is True:
@@ -167,7 +166,6 @@ def f0Morph(
 
     # 4. (Optional) Plot the generated contours
     if doPlotPitchSteps:
-
         fromTime, fromVals = zip(*fromPitchData)
         toTime, toVals = zip(*toPitchData)
 

@@ -178,15 +178,12 @@ def getManipulatedParamaters(tgFN, tierName, modFunc, filterFunc=None, useBlanks
 
 
 def outputMorphTextgrids(fromTGFN, durationParameters, stepList, outputTGName):
-
     if outputTGName is not None:
         utils.makeDir(os.path.split(outputTGName)[0])
 
     # Create the adjusted textgrids
     if outputTGName is not None:
-
         for stepFactor in stepList:
-
             stepDurationParameters = [
                 (start, end, 1 + (ratio - 1) * stepFactor)
                 for start, end, ratio in durationParameters
@@ -202,7 +199,6 @@ def outputMorphTextgrids(fromTGFN, durationParameters, stepList, outputTGName):
 def outputMorphPlot(
     fromTGFN, toTGFN, tierName, durationParameters, stepList, outputImageFN
 ):
-
     if outputImageFN is not None:
         utils.makeDir(os.path.split(outputImageFN)[0])
 
@@ -230,7 +226,6 @@ def _plotResults(
     filterFunc,
     includeUnlabeledRegions,
 ):
-
     # Containers
     fromDurList = []
     toDurList = []
@@ -279,9 +274,9 @@ def textgridMorphDuration(fromTGFN, toTGFN):
     toTG = textgrid.openTextgrid(toTGFN, includeEmptyIntervals=False)
     adjustedTG = textgrid.Textgrid()
 
-    for tierName in fromTG.tierNameList:
-        fromTier = fromTG.tierDict[tierName]
-        toTier = toTG.tierDict[tierName]
+    for tierName in fromTG.tierNames:
+        fromTier = fromTG.getTier(tierName)
+        toTier = toTG.getTier(tierName)
         adjustedTier = fromTier.morph(toTier)
         adjustedTG.addTier(adjustedTier)
 
@@ -289,13 +284,12 @@ def textgridMorphDuration(fromTGFN, toTGFN):
 
 
 def textgridManipulateDuration(tgFN, ratioList):
-
     tg = textgrid.openTextgrid(tgFN, includeEmptyIntervals=False)
 
     adjustedTG = textgrid.Textgrid()
 
-    for tierName in tg.tierNameList:
-        fromTier = tg.tierDict[tierName]
+    for tierName in tg.tierNames:
+        fromTier = tg.getTier(tierName)
 
         adjustedTier = None
         if isinstance(fromTier, textgrid.IntervalTier):
@@ -315,12 +309,10 @@ def _getTimeDiff(start, stop, ratio):
 
 
 def _morphPointTier(tier, ratioList):
-
     cumulativeAdjustAmount = 0
     i = 0
     newEntryList = []
-    for timestamp, label in tier.entryList:
-
+    for timestamp, label in tier.entries:
         # Advance to the manipulation interval that coincides with the
         # current point or appears after it
         while i < len(ratioList) and timestamp > ratioList[i][1]:
@@ -339,16 +331,14 @@ def _morphPointTier(tier, ratioList):
         newEntryList.append((newTime, label))
 
     maxT = tier.maxTimestamp + cumulativeAdjustAmount
-    return tier.new(entryList=newEntryList, maxTimestamp=maxT)
+    return tier.new(entries=newEntryList, maxTimestamp=maxT)
 
 
 def _morphIntervalTier(tier, ratioList):
-
     cumulativeAdjustAmount = 0
     i = 0
     newEntryList = []
-    for start, stop, label in tier.entryList:
-
+    for start, stop, label in tier.entries:
         # Syncronize the manipulation and data intervals so that they
         # are either overlapping or the manipulation interval is farther
         # in the future.  This accumulates the effect of past
@@ -399,4 +389,4 @@ def _morphIntervalTier(tier, ratioList):
         newEntryList.append((newStart, newStop, label))
 
     newMax = tier.maxTimestamp + cumulativeAdjustAmount
-    return tier.new(entryList=newEntryList, maxTimestamp=newMax)
+    return tier.new(entries=newEntryList, maxTimestamp=newMax)

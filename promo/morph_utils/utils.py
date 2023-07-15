@@ -16,23 +16,21 @@ def getIntervals(fn, tierName, filterFunc=None, includeUnlabeledRegions=False):
 
     tg = textgrid.openTextgrid(fn, includeEmptyIntervals=includeUnlabeledRegions)
 
-    tier = tg.tierDict[tierName]
+    tier = tg.getTier(tierName)
 
-    entryList = tier.entryList
+    entries = tier.entries
     if filterFunc is not None:
-        entryList = [entry for entry in entryList if filterFunc(entry)]
+        entries = [entry for entry in entries if filterFunc(entry)]
 
-    return entryList
+    return entries
 
 
 def makeDir(path):
-
     if not os.path.exists(path):
         os.mkdir(path)
 
 
 def generateStepList(numSteps, includeZero=False):
-
     assert numSteps > 0
 
     stepList = []

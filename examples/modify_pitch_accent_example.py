@@ -69,8 +69,8 @@ pointObj.save(join(rootOutputPath, originalPitchFN))
 
 # 2nd - get region to manipulate.  Let's make the subject more emphatic!
 tg = textgrid.openTextgrid(join(root, "mary1.TextGrid"), includeEmptyIntervals=False)
-tier = tg.tierDict["words"]
-start, stop, _ = tier.entryList[0]  # Getting info for the first word
+tier = tg.getTier("words")
+start, stop, _ = tier.entries[0]  # Getting info for the first word
 
 targetPitchList = [
     (timeV, pitchV) for timeV, pitchV in pitchList if timeV >= start and timeV <= stop
@@ -112,7 +112,6 @@ outputFN = join(rootOutputPath, os.path.splitext(outputWavFN)[0] + "_s%s_h%s_p%s
 for plateauAmount in [0.0, 0.04, 0.08]:
     for heightAmount in [0, 40, 80]:
         for shiftAmount in [0.0, 0.04, 0.08]:
-
             accent = modify_pitch_accent.PitchAccent(targetPitchList)
             accent.addPlateau(plateauAmount)
             accent.adjustPeakHeight(heightAmount)
