@@ -3,11 +3,11 @@
 ProMo (Prosody Morph)
 -----------------------
 
-.. image:: https://travis-ci.org/timmahrt/ProMo.svg?branch=master
+.. image:: https://travis-ci.org/timmahrt/ProMo.svg?branch=main
     :target: https://travis-ci.org/timmahrt/ProMo
 
-.. image:: https://coveralls.io/repos/github/timmahrt/ProMo/badge.svg?branch=master
-    :target: https://coveralls.io/github/timmahrt/ProMo?branch=master
+.. image:: https://coveralls.io/repos/github/timmahrt/ProMo/badge.svg?branch=main
+    :target: https://coveralls.io/github/timmahrt/ProMo?branch=main
     
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg?
    :target: http://opensource.org/licenses/MIT
@@ -157,53 +157,31 @@ Tutorials
 
 Tutorials for learning about prosody manipulation and how to use ProMo are available.
 
-`Tutorial 1.1: Intro to ProMo <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/master/tutorials/tutorial1_1_intro_to_promo.ipynb>`_
+`Tutorial 1.1: Intro to ProMo <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/main/tutorials/tutorial1_1_intro_to_promo.ipynb>`_
 
-`Tutorial 1.2: Pitch manipulation tutorial <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/master/tutorials/tutorial1_2_pitch_manipulations.ipynb>`_
+`Tutorial 1.2: Pitch manipulation tutorial <https://nbviewer.jupyter.org/github/timmahrt/ProMo/blob/main/tutorials/tutorial1_2_pitch_manipulations.ipynb>`_
 
 
-Major revisions
+Version History
 ================
 
-Ver 1.3 (May 29, 2017)
+*ProMo uses semantic versioning (Major.Minor.Patch)*
 
-- added tutorials
-
-- f0Morph() can now exclude certain regions from the morph process if desired
-
-Ver 1.2 (January 27, 2017)
-
-- added code for reshaping pitch accents (shift alignment, add plateau, or change height)
-
-Ver 1.1 (February 22, 2016)
-
-- f0 morph code for modifying speaker pitch range and average pitch
-
-- (October 20, 2016) Added integration tests with travis CI and coveralls support.
-
-Ver 1.0 (January 19, 2016)
-
-- first public release.
-
-Beta (July 1, 2013)
-
-- first version which was utilized in my dissertation work
+Please view `CHANGELOG.md <https://github.com/timmahrt/promo/blob/main/CHANGELOG.md>` for version history.
 
 
 Requirements
 ==============
 
-``Python 2.7.*`` or above
-
 ``Python 3.3.*`` or above (or below, probably)
 
-My praatIO library is used extensively and can be downloaded 
+My praatIO library is required and can be downloaded
 `here <https://github.com/timmahrt/praatIO>`_
 
-Matplotlib is needed if you want to plot graphs.
+Matplotlib is required if you want to plot graphs.
 `Matplotlib website <http://matplotlib.org/>`_
 
-Scipy is needed if you want to use interpolation--typically if you have stylized
+Scipy is required if you want to use interpolation--typically if you have stylized
 pitch contours (in praat PitchTier format, for example) that you want to use in
 your morphing).
 `Scipy website <http://scipy.org/>`_
@@ -235,6 +213,8 @@ Otherwise, to manually install, after downloading the source from github, from a
 If python is not in your path, you'll need to enter the full path e.g.::
 
 	C:\Python27\python.exe setup.py install
+
+If you are using ``Python 2.x`` or ``Python < 3.7``, you can use `Promo 1.x`.
 
 Usage
 =========
