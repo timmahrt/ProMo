@@ -23,6 +23,6 @@ setup(
         "Library for manipulating pitch and duration in an "
         "algorithmic way, for resynthesizing speech"
     ),
-    long_description=io.open("README.rst", "r", encoding="utf-8").read(),
+    long_description=io.open("README.md", "r", encoding="utf-8").read(),
     #       install_requires=[], # No requirements! # requires 'from setuptools import setup'
 )
