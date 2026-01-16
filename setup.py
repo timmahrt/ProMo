@@ -11,18 +11,19 @@ import io
 setup(
     name="promo",
     python_requires=">3.6.0",
-    version="2.0.0",
+    version="2.0.1",
     author="Tim Mahrt",
     author_email="timmahrt@gmail.com",
     url="https://github.com/timmahrt/ProMo",
     package_dir={"promo": "promo"},
     packages=["promo", "promo.morph_utils"],
     license="LICENSE",
-    install_requires=["praatio ~= 6.0", "typing_extensions"],
+    install_requires=["praatio ~= 6.2", "typing_extensions"],
     description=(
         "Library for manipulating pitch and duration in an "
         "algorithmic way, for resynthesizing speech"
     ),
     long_description=io.open("README.md", "r", encoding="utf-8").read(),
-    #       install_requires=[], # No requirements! # requires 'from setuptools import setup'
+    # No requirements! # requires 'from setuptools import setup'
+    #       install_requires=[],
 )

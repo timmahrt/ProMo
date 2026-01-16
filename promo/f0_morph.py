@@ -150,6 +150,7 @@ def f0Morph(
         pointObj = data_points.PointObject2D(
             outputDataList, constants.DataPointTypes.PITCH, 0, fromDuration
         )
+
         pointObj.save(pitchFNFullPath)
 
         outputTime, outputVals = zip(*outputDataList)
