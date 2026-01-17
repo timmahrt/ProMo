@@ -264,6 +264,17 @@ def _plotResults(
     )
 
 
+def _addTiersToTextgrid(tg, tiers):
+    """
+    Adds tiers to a textgrid, ensuring the textgrid and tiers all have the same max timestamp
+    """
+    maxTimestamp = max(adjustedTier.maxTimestamp for adjustedTier in tiers)
+    tg.maxTimestamp = maxTimestamp
+    for tier in tiers:
+        tier.maxTimestamp = maxTimestamp
+        tg.addTier(tier)
+
+
 def textgridMorphDuration(fromTGFN, toTGFN):
     """
     A convenience function.  Morphs interval durations of one tg to another.
@@ -274,11 +285,14 @@ def textgridMorphDuration(fromTGFN, toTGFN):
     toTG = textgrid.openTextgrid(toTGFN, includeEmptyIntervals=False)
     adjustedTG = textgrid.Textgrid()
 
+    adjustedTiers = []
     for tierName in fromTG.tierNames:
         fromTier = fromTG.getTier(tierName)
         toTier = toTG.getTier(tierName)
         adjustedTier = fromTier.morph(toTier)
-        adjustedTG.addTier(adjustedTier)
+        adjustedTiers.append(adjustedTier)
+
+    _addTiersToTextgrid(adjustedTG, adjustedTiers)
 
     return adjustedTG
 
@@ -288,6 +302,7 @@ def textgridManipulateDuration(tgFN, ratioList):
 
     adjustedTG = textgrid.Textgrid()
 
+    adjustedTiers = []
     for tierName in tg.tierNames:
         fromTier = tg.getTier(tierName)
 
@@ -298,7 +313,9 @@ def textgridManipulateDuration(tgFN, ratioList):
             adjustedTier = _morphPointTier(fromTier, ratioList)
 
         assert adjustedTier is not None
-        adjustedTG.addTier(adjustedTier)
+        adjustedTiers.append(adjustedTier)
+
+    _addTiersToTextgrid(adjustedTG, adjustedTiers)
 
     return adjustedTG
 

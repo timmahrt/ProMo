@@ -163,16 +163,6 @@ On Windows, open a cmd or powershell window and type:
   
   e.g. `C:\\python27\\python.exe -m install matplotlib`
 
-Otherwise, to manually install, after downloading the source from github, from a command-line shell, navigate to the directory containing setup.py and type::
-
-  `python setup.py install`
-
-If python is not in your path, you'll need to enter the full path e.g.::
-
-  `C:\Python27\python.exe setup.py install`
-
-If you are using ``Python 2.x`` or ``Python < 3.7``, you can use `Promo 1.x`.
-
 ## Usage
 
 See /examples for example usages
@@ -180,17 +170,19 @@ See /examples for example usages
 
 ## Installation
 
+If you are using ``Python 2.x`` or ``Python < 3.7``, you can use `Promo 1.x`.
+
 Promo is on pypi and can be installed or upgraded from the command-line shell with pip like so::
 
   `python -m pip install promo --upgrade`
 
-Otherwise, to manually install, after downloading the source from github, from a command-line shell, navigate to the directory containing setup.py and type::
+Otherwise, to manually install, after downloading the source from github, from a command-line shell, navigate to the root directory and type::
 
-  `python setup.py install`
+  `python -m pip install .`
 
 If python is not in your path, you'll need to enter the full path e.g.::
 
-  `C:\Python36\python.exe setup.py install`
+  `C:\Python36\python.exe -m pip install .`
 
 
 ## Citing ProMo
