@@ -1,0 +1,23 @@
+[project]
+name = "promo"
+version = "2.0.1"
+description = "Library for manipulating pitch and duration in an algorithmic way, for resynthesizing speech"
+readme = "README.md"
+requires-python = ">=3.6"
+authors = [
+    { name = "Tim Mahrt", email = "timmahrt@gmail.com" }
+]
+license = { file = "LICENSE" }
+urls = { Homepage = "https://github.com/timmahrt/ProMo" }
+
+dependencies = [
+    "praatio ~= 6.2.1",
+    "typing_extensions",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["promo", "promo.morph_utils"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
