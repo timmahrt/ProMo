@@ -62,7 +62,7 @@ piList = pitch_and_intensity.extractPI(
 )
 pitchList = [(timeV, pitchV) for timeV, pitchV, _ in piList]
 
-dur = audio.WavQueryObj(join(root, wavFN)).getDuration()
+dur = audio.getDuration(join(root, wavFN))
 pointObj = data_points.PointObject2D(pitchList, constants.DataPointTypes.PITCH, 0, dur)
 pointObj.save(join(rootOutputPath, originalPitchFN))
 
