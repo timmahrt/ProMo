@@ -21,8 +21,11 @@ Tests are run with
 
 Releases are built and deployed with:
 
-`python setup.py bdist_wheel sdist`
-
-`twine upload dist/*`
+```bash
+pip install --upgrade build
+python -m build
+pip install --upgrade twine
+twine upload dist/*
+```
 
 Don't forget to tag the release.

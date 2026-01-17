@@ -176,7 +176,7 @@ Promo is on pypi and can be installed or upgraded from the command-line shell wi
 
   `python -m pip install promo --upgrade`
 
-Otherwise, to manually install, after downloading the source from github, from a command-line shell, navigate to the directory containing setup.py and type::
+Otherwise, to manually install, after downloading the source from github, from a command-line shell, navigate to the root directory and type::
 
   `python -m pip install .`
 
