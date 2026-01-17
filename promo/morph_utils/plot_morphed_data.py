@@ -124,7 +124,7 @@ def plotIntensity(fromDataList, toDataList, mergeTupleList, controlPoints, fnFul
         returnList = []
         for i in range(int(math.ceil(len(valueList) / float(stepSize)))):
             subList = valueList[i * stepSize : (i + 1) * stepSize]
-            value = math.sqrt(sum([val ** 2 for val in subList]))
+            value = math.sqrt(sum([val**2 for val in subList]))
 
             returnList.append(20.0 * math.log10(value))
 
